@@ -1,11 +1,11 @@
 # TODO
 
-- [ ] Build level 
+- [ ] Build level
   - [x] set theme
   - [x] build sky
   - [x] build background
   - [x] build decorations
-    - [x] build obstical randomizer
+    - [x] build decorations randomizer
   - [x] build ground
   - [x] build road
   - [ ] build obstical layer
@@ -22,4 +22,3 @@
 - [ ] create pause menu
 - [ ] create settings menu
 - [ ] create credits menu
-

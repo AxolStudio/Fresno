@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TextureAtlas imagePath="vehicles.png">
+	<!--
+	Created with ShoeBox
+	http://renderhjs.net/shoebox/
+	-->
+	<SubTexture name="ME_Singles_Vehicles_16x16_Ambulance_Right_1"	x="0"	y="0"	width="114"	height="67" frameX="-9" frameY="-13" frameWidth="128" frameHeight="80"/>
+	<SubTexture name="ME_Singles_Vehicles_16x16_Ambulance_Right_2"	x="0"	y="68"	width="114"	height="67" frameX="-9" frameY="-13" frameWidth="128" frameHeight="80"/>
+	<SubTexture name="ME_Singles_Vehicles_16x16_Bus_Right_1"	x="0"	y="199"	width="111"	height="62" frameX="-1" frameY="-2" frameWidth="112" frameHeight="64"/>
+	<SubTexture name="ME_Singles_Vehicles_16x16_Bus_Right_2"	x="0"	y="262"	width="111"	height="62" frameX="-1" frameY="-2" frameWidth="112" frameHeight="64"/>
+	<SubTexture name="ME_Singles_Vehicles_16x16_Bus_Right_3"	x="112"	y="136"	width="111"	height="62" frameX="-1" frameY="-2" frameWidth="112" frameHeight="64"/>
+	<SubTexture name="ME_Singles_Vehicles_16x16_Bus_Right_4"	x="0"	y="136"	width="111"	height="62" frameX="-1" frameY="-2" frameWidth="112" frameHeight="64"/>
+	<SubTexture name="ME_Singles_Vehicles_16x16_Bus_Right_5"	x="112"	y="262"	width="111"	height="62" frameX="-1" frameY="-2" frameWidth="112" frameHeight="64"/>
+	<SubTexture name="ME_Singles_Vehicles_16x16_Bus_Right_6"	x="112"	y="199"	width="111"	height="62" frameX="-1" frameY="-2" frameWidth="112" frameHeight="64"/>
+	<SubTexture name="ME_Singles_Vehicles_16x16_Camper_Right_1"	x="224"	y="229"	width="94"	height="56" frameX="-1" frameY="-5" frameWidth="96" frameHeight="64"/>
+	<SubTexture name="ME_Singles_Vehicles_16x16_Camper_Right_2"	x="224"	y="286"	width="94"	height="56" frameX="-1" frameY="-5" frameWidth="96" frameHeight="64"/>
+	<SubTexture name="ME_Singles_Vehicles_16x16_Camper_Right_3"	x="225"	y="0"	width="94"	height="56" frameX="-1" frameY="-5" frameWidth="96" frameHeight="64"/>
+	<SubTexture name="ME_Singles_Vehicles_16x16_Camper_Right_4"	x="224"	y="172"	width="94"	height="56" frameX="-1" frameY="-5" frameWidth="96" frameHeight="64"/>
+	<SubTexture name="ME_Singles_Vehicles_16x16_Car_Right_1"	x="124"	y="343"	width="61"	height="37" frameX="-2" frameY="-11" frameWidth="64" frameHeight="48"/>
+	<SubTexture name="ME_Singles_Vehicles_16x16_Car_Right_2"	x="0"	y="343"	width="61"	height="37" frameX="-2" frameY="-11" frameWidth="64" frameHeight="48"/>
+	<SubTexture name="ME_Singles_Vehicles_16x16_Car_Right_3"	x="62"	y="343"	width="61"	height="37" frameX="-2" frameY="-11" frameWidth="64" frameHeight="48"/>
+	<SubTexture name="ME_Singles_Vehicles_16x16_Car_Right_4"	x="310"	y="343"	width="61"	height="37" frameX="-2" frameY="-11" frameWidth="64" frameHeight="48"/>
+	<SubTexture name="ME_Singles_Vehicles_16x16_Car_Right_5"	x="186"	y="343"	width="61"	height="37" frameX="-2" frameY="-11" frameWidth="64" frameHeight="48"/>
+	<SubTexture name="ME_Singles_Vehicles_16x16_Car_Right_6"	x="248"	y="343"	width="61"	height="37" frameX="-2" frameY="-11" frameWidth="64" frameHeight="48"/>
+	<SubTexture name="ME_Singles_Vehicles_16x16_Ice_Cream_Truck_2"	x="115"	y="0"	width="109"	height="82" frameX="-2" frameY="-14" frameWidth="112" frameHeight="96"/>
+	<SubTexture name="ME_Singles_Vehicles_16x16_Pizza_Tuk_Tuk_2"	x="224"	y="83"	width="96"	height="88" frameX="-0" frameY="-8" frameWidth="96" frameHeight="96"/>
+</TextureAtlas>

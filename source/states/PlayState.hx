@@ -1,5 +1,6 @@
 package states;
 
+import objects.Obstacle;
 import objects.Shadow;
 import globals.Actions;
 import objects.Road;
@@ -25,7 +26,7 @@ class PlayState extends FlxState
 	public var lyrBackground:FlxTypedGroup<FlxSprite>; // background repeating images
 	public var lyrBackDeco:FlxTypedGroup<Decoration>;
 	public var lyrStreet:FlxTypedGroup<Road>;
-	public var lyrStreetObjects:FlxTypedGroup<FlxSprite>;
+	public var lyrStreetObjects:FlxTypedGroup<Obstacle>;
 	public var lyrShadow:FlxTypedGroup<Shadow>;
 	public var lyrPlayer:FlxTypedGroup<Player>;
 	public var lyrFrontDeco:FlxTypedGroup<FlxSprite>;
@@ -45,7 +46,10 @@ class PlayState extends FlxState
 
 	public var movementAllowed:Bool = false;
 
-	public var playerHitbox:FlxSprite;
+	public var laneX:Array<Float>;
+
+	public var difficulty:Float = 0.5;
+	
 
 	public function new():Void
 	{
@@ -70,7 +74,7 @@ class PlayState extends FlxState
 		add(lyrBackground = new FlxTypedGroup<FlxSprite>());
 		add(lyrBackDeco = new FlxTypedGroup<Decoration>());
 		add(lyrStreet = new FlxTypedGroup<Road>());
-		add(lyrStreetObjects = new FlxTypedGroup<FlxSprite>());
+		add(lyrStreetObjects = new FlxTypedGroup<Obstacle>());
 		add(lyrShadow = new FlxTypedGroup<Shadow>());
 		add(lyrPlayer = new FlxTypedGroup<Player>());
 		add(lyrFrontDeco = new FlxTypedGroup<FlxSprite>());
@@ -82,11 +86,29 @@ class PlayState extends FlxState
 
 		createStartingRoad();
 
+		createStartingObstacles();
+
 		createPlayer();
 
 		movementAllowed = true;
 
 		super.create();
+	}
+
+	private function createStartingObstacles():Void
+	{
+		laneX = [
+			FlxG.width + 16,
+			FlxG.width + 16,
+			FlxG.width + 16,
+			FlxG.width + 16,
+			FlxG.width + 16
+		];
+
+		for (i in 0...10)
+		{
+			lyrStreetObjects.add(new Obstacle());
+		}
 	}
 
 	private function createStartingDeco():Void
@@ -107,8 +129,7 @@ class PlayState extends FlxState
 
 	private function createPlayer():Void
 	{
-		playerHitbox = new FlxSprite();
-		player = new Player(playerHitbox);
+		player = new Player();
 		player.x = 40;
 		player.y = 64 + ((FlxG.height - 64) / 2) - player.height;
 
@@ -156,6 +177,23 @@ class PlayState extends FlxState
 		if (movementAllowed)
 			player.movement(elapsed);
 		checkBounds();
+		checkCollisions();
+	}
+
+	public function checkCollisions():Void
+	{
+		FlxG.overlap(lyrPlayer, lyrStreetObjects, playerHitObstacle, checkPlayerHitObstacle);
+	}
+
+	private function checkPlayerHitObstacle(P:Player, O:Obstacle):Bool
+	{
+		trace(P.jumpingHeight, O.ZHeight);
+		return P.jumpingHeight <= O.ZHeight;
+	}
+
+	private function playerHitObstacle(P:Player, O:Obstacle):Void
+	{
+		player.hurt(1);
 	}
 
 	public function checkBounds():Void
@@ -191,6 +229,14 @@ class PlayState extends FlxState
 			lyrBackDeco.add(deco);
 		}
 
+		for (o in lyrStreetObjects)
+		{
+			if (o.x + o.width < camera.scroll.x)
+			{
+				o.kill();
+			}
+		}
+
 		var road:Road = lyrStreet.members[0];
 		if (road.x + road.width < camera.scroll.x)
 		{
@@ -201,6 +247,30 @@ class PlayState extends FlxState
 			road.y = roadY;
 
 			lyrStreet.add(road);
+			difficulty += .01;
+
+			addObstacles(road.x);
 		}
+	}
+	private function addObstacles(CurrentX:Float):Void
+	{
+		for (l in 0...laneX.length)
+		{
+			if (CurrentX >= laneX[l] && FlxG.random.bool(difficulty))
+			{
+				var obstacle = lyrStreetObjects.recycle(Obstacle);
+				if (obstacle == null)
+				{
+					obstacle = new Obstacle();
+				}
+				obstacle.spawn(l, levelTheme);
+				obstacle.x = CurrentX;
+				obstacle.y = zoneTop + ((l + 1) * 16) - 1 - obstacle.height;
+				lyrStreetObjects.add(obstacle);
+
+				laneX[l] = CurrentX + obstacle.width + (16 * FlxG.random.int(1, 4));
+			}
+		}
+
 	}
 }
