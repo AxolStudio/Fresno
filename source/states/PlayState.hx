@@ -1,5 +1,7 @@
 package states;
 
+import objects.Shadow;
+import globals.Actions;
 import objects.Road;
 import objects.Decoration;
 import flixel.math.FlxRect;
@@ -24,6 +26,7 @@ class PlayState extends FlxState
 	public var lyrBackDeco:FlxTypedGroup<Decoration>;
 	public var lyrStreet:FlxTypedGroup<Road>;
 	public var lyrStreetObjects:FlxTypedGroup<FlxSprite>;
+	public var lyrShadow:FlxTypedGroup<Shadow>;
 	public var lyrPlayer:FlxTypedGroup<Player>;
 	public var lyrFrontDeco:FlxTypedGroup<FlxSprite>;
 
@@ -36,9 +39,13 @@ class PlayState extends FlxState
 	public var lastObjectX:Float = 0;
 
 	public var zoneTop:Float = 80;
-	public var zoneBottom:Float = 144;
+	public var zoneBottom:Float = 160;
 
 	public var roadY:Float = 64;
+
+	public var movementAllowed:Bool = false;
+
+	public var playerHitbox:FlxSprite;
 
 	public function new():Void
 	{
@@ -64,6 +71,7 @@ class PlayState extends FlxState
 		add(lyrBackDeco = new FlxTypedGroup<Decoration>());
 		add(lyrStreet = new FlxTypedGroup<Road>());
 		add(lyrStreetObjects = new FlxTypedGroup<FlxSprite>());
+		add(lyrShadow = new FlxTypedGroup<Shadow>());
 		add(lyrPlayer = new FlxTypedGroup<Player>());
 		add(lyrFrontDeco = new FlxTypedGroup<FlxSprite>());
 		add(lyrHUD = new FlxTypedGroup<FlxSprite>());
@@ -75,6 +83,8 @@ class PlayState extends FlxState
 		createStartingRoad();
 
 		createPlayer();
+
+		movementAllowed = true;
 
 		super.create();
 	}
@@ -97,13 +107,20 @@ class PlayState extends FlxState
 
 	private function createPlayer():Void
 	{
-		player = new Player();
+		playerHitbox = new FlxSprite();
+		player = new Player(playerHitbox);
 		player.x = 40;
 		player.y = 64 + ((FlxG.height - 64) / 2) - player.height;
 
 		player.velocity.x = levelSpeed;
 
+		player.animation.play("walk");
+
 		lyrPlayer.add(player);
+
+		lyrShadow.add(new Shadow(player));
+
+		// add(playerHitbox);
 
 		FlxG.camera.follow(player);
 		FlxG.camera.deadzone = FlxRect.get(40, 80, 0, FlxG.height - 80);
@@ -136,6 +153,17 @@ class PlayState extends FlxState
 		super.update(elapsed);
 
 		checkBackgrounds();
+		if (movementAllowed)
+			player.movement(elapsed);
+		checkBounds();
+	}
+
+	public function checkBounds():Void
+	{
+		if (player.y < zoneTop)
+			player.y = zoneTop;
+		else if (player.y + player.height > zoneBottom)
+			player.y = zoneBottom - player.height;
 	}
 
 	public function checkBackgrounds():Void

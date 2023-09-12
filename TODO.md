@@ -1,16 +1,19 @@
+# TODO
+
 - [ ] Build level 
-    - [x] set theme
-    - [x] build sky
-    - [x] build background
-    - [x] build decorations
-    - [ ] build road
-    - [ ] build obstical layer
-- [x] build obstical randomizer
-- [ ] build player
+  - [x] set theme
+  - [x] build sky
+  - [x] build background
+  - [x] build decorations
+    - [x] build obstical randomizer
+  - [x] build ground
+  - [x] build road
+  - [ ] build obstical layer
+- [x] build player
 - [ ] build HUD
-    - [ ] health
-    - [ ] distance
-- [ ] time
+  - [ ] health
+  - [ ] distance
+  - [ ] time
 - [ ] create powerups
 - [ ] create death state
 - [ ] create win state
@@ -19,3 +22,4 @@
 - [ ] create pause menu
 - [ ] create settings menu
 - [ ] create credits menu
+

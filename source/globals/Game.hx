@@ -19,6 +19,8 @@ class Game
 		if (gameInitialized)
 			return;
 
+		Actions.init();
+
 		buildSkyGradients();
 
 		buildBackgrounds();
