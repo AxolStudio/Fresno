@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<source path="axollib" />
+	<section unless="unit-test ">
+		<assets path="assets/images/color-logo.png" rename="axollib/images/color-logo.png" embed="true" />
+		<assets path="assets/images/color-stroke.png" rename="axollib/images/color-stroke.png" embed="true" />
+		<assets path="assets/sounds/madeinstl.wav" rename="axollib/sounds/madeinstl.wav" embed="true" />
+		<assets path="assets/images/madeinstlouis.png" rename="axollib/images/madeinstlouis.png" embed="true" />
+		<assets path="assets/images/white-logo-w-rainbow.png" rename="axollib/images/white-logo-w-rainbow.png" embed="true" />
+		<assets path="assets/images/agents.png" rename="axollib/images/agents.png" embed="true" />
+		<assets path="assets/images/haxeflixel-text.png" rename="axollib/images/haxeflixel-text.png" embed="true" />
+		<assets path="assets/images/axol-intro.ase" rename="axollib/images/axol-intro.ase" embed="true" />
+		<assets path="assets/images/axol-intro.json" rename="axollib/images/axol-intro.json" embed="true" />
+		<assets path="assets/images/axol-intro.png" rename="axollib/images/axol-intro.png" embed="true" />
+	</section>
+	<!-- <haxelib name="openfl-aseprite" /> -->
+</project>

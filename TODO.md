@@ -1,0 +1,21 @@
+- [ ] Build level 
+    - [x] set theme
+    - [x] build sky
+    - [x] build background
+    - [x] build decorations
+    - [ ] build road
+    - [ ] build obstical layer
+- [x] build obstical randomizer
+- [ ] build player
+- [ ] build HUD
+    - [ ] health
+    - [ ] distance
+- [ ] time
+- [ ] create powerups
+- [ ] create death state
+- [ ] create win state
+- [ ] create level select
+- [ ] create main menu
+- [ ] create pause menu
+- [ ] create settings menu
+- [ ] create credits menu

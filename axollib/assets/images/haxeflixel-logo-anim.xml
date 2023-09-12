@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TextureAtlas imagePath="haxeflixel-05-sprites.png">
+	<!--
+	Created with ShoeBox
+	http://renderhjs.net/shoebox/
+	-->
+	<SubTexture name="haxeflixel-01.png"	x="0"	y="137"	width="54"	height="54" frameX="-9" frameY="-9" frameWidth="72" frameHeight="72"/>
+	<SubTexture name="haxeflixel-02.png"	x="73"	y="73"	width="63"	height="63" frameX="-0" frameY="-0" frameWidth="72" frameHeight="72"/>
+	<SubTexture name="haxeflixel-03.png"	x="0"	y="73"	width="72"	height="63" frameX="-0" frameY="-0" frameWidth="72" frameHeight="72"/>
+	<SubTexture name="haxeflixel-04.png"	x="0"	y="0"	width="72"	height="72" frameX="-0" frameY="-0" frameWidth="72" frameHeight="72"/>
+	<SubTexture name="haxeflixel-05.png"	x="73"	y="0"	width="72"	height="72" frameX="-0" frameY="-0" frameWidth="72" frameHeight="72"/>
+</TextureAtlas>
