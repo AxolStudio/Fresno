@@ -4,18 +4,12 @@
 	Created with ShoeBox
 	http://renderhjs.net/shoebox/
 	-->
-	<SubTexture name="ME_Singles_Camping_16x16_Cut_Wood_1"	x="47"	y="34"	width="9"	height="20" frameX="-4" frameY="-7" frameWidth="16" frameHeight="32"/>
-	<SubTexture name="ME_Singles_Camping_16x16_Rock_1"	x="36"	y="0"	width="11"	height="8" frameX="-3" frameY="-5" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="ME_Singles_Camping_16x16_Rock_2"	x="0"	y="26"	width="16"	height="14" frameX="-0" frameY="-1" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="ME_Singles_Camping_16x16_Rock_3"	x="17"	y="39"	width="16"	height="14" frameX="-0" frameY="-1" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="ME_Singles_Camping_16x16_Rock_4"	x="34"	y="22"	width="13"	height="11" frameX="-1" frameY="-1" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="ME_Singles_Camping_16x16_Rock_5"	x="20"	y="0"	width="15"	height="10" frameX="-0" frameY="-3" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="ME_Singles_Camping_16x16_Rock_6"	x="34"	y="11"	width="14"	height="10" frameX="-1" frameY="-3" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="ME_Singles_Camping_16x16_Rock_7"	x="0"	y="13"	width="16"	height="12" frameX="-0" frameY="-2" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="ME_Singles_Camping_16x16_Rock_8"	x="17"	y="22"	width="16"	height="16" frameX="-0" frameY="-0" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="ME_Singles_Camping_16x16_Rock_9"	x="17"	y="13"	width="16"	height="8" frameX="-0" frameY="-7" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="ME_Singles_Camping_16x16_Tire_1"	x="0"	y="41"	width="16"	height="14" frameX="-0" frameY="-1" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="ME_Singles_Worksite_16x16_Cone_1"	x="34"	y="44"	width="11"	height="14" frameX="-3" frameY="-1" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="ME_Singles_Worksite_16x16_Props_5"	x="34"	y="34"	width="12"	height="9" frameX="-2" frameY="-5" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="ME_Singles_Worksite_16x16_Props_6"	x="0"	y="0"	width="19"	height="12" frameX="-7" frameY="-3" frameWidth="32" frameHeight="16"/>
+	<SubTexture name="obj_10_8_14"	x="34"	y="13"	width="11"	height="14" frameX="-3" frameY="-1" frameWidth="16" frameHeight="16"/>
+	<SubTexture name="obj_16_12_0"	x="0"	y="0"	width="19"	height="12" frameX="-0" frameY="-3" frameWidth="19" frameHeight="16"/>
+	<SubTexture name="obj_16_16_11"	x="20"	y="0"	width="16"	height="12" frameX="-0" frameY="-2" frameWidth="16" frameHeight="16"/>
+	<SubTexture name="obj_16_16_13"	x="17"	y="28"	width="16"	height="14" frameX="-0" frameY="-1" frameWidth="16" frameHeight="16"/>
+	<SubTexture name="obj_16_16_14"	x="17"	y="13"	width="16"	height="14" frameX="-0" frameY="-1" frameWidth="16" frameHeight="16"/>
+	<SubTexture name="obj_16_16_16"	x="0"	y="28"	width="16"	height="16" frameX="-0" frameY="-0" frameWidth="16" frameHeight="16"/>
+	<SubTexture name="obj_16_16_5"	x="0"	y="13"	width="16"	height="14" frameX="-0" frameY="-1" frameWidth="16" frameHeight="16"/>
+	<SubTexture name="obj_8_16_5"	x="34"	y="28"	width="9"	height="16" frameX="-4" frameY="-0" frameWidth="16" frameHeight="16"/>
 </TextureAtlas>

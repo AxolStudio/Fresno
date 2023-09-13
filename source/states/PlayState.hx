@@ -146,6 +146,7 @@ class PlayState extends FlxState
 		FlxG.camera.follow(player);
 		FlxG.camera.deadzone = FlxRect.get(40, 80, 0, FlxG.height - 80);
 		FlxG.camera.setScrollBoundsRect(0, 0, 1000000, FlxG.height, true);
+
 	}
 
 	private function createBackground():Void
@@ -172,6 +173,8 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		// FlxG.worldBounds.set(FlxG.camera.x, FlxG.camera.y, FlxG.camera.width, FlxG.camera.height);
 
 		checkBackgrounds();
 		if (movementAllowed)
@@ -209,7 +212,7 @@ class PlayState extends FlxState
 		// if the left-most background object has scrolled off the screen to the left, move it to the end of the last background object
 		var bg:FlxSprite = lyrBackground.members[0];
 		// trace(bg.x + bg.width + " < " + camera.scroll.x);
-		if (bg.x + bg.width < camera.scroll.x)
+		if (bg.x + bg.width < camera.scroll.x - 32)
 		{
 			bg.x = lyrBackground.members[lyrBackground.length - 1].x + lyrBackground.members[lyrBackground.length - 1].width;
 			lyrBackground.remove(bg, true);
@@ -217,7 +220,7 @@ class PlayState extends FlxState
 		}
 
 		var deco:Decoration = lyrBackDeco.members[0];
-		if (deco.x + deco.width < camera.scroll.x)
+		if (deco.x + deco.width < camera.scroll.x - 32)
 		{
 			lyrBackDeco.remove(deco, true);
 
@@ -231,7 +234,7 @@ class PlayState extends FlxState
 
 		for (o in lyrStreetObjects)
 		{
-			if (o.x + o.width < camera.scroll.x)
+			if (o.x + o.width < camera.scroll.x - 32)
 			{
 				o.kill();
 			}
@@ -263,9 +266,8 @@ class PlayState extends FlxState
 				{
 					obstacle = new Obstacle();
 				}
-				obstacle.spawn(l, levelTheme);
-				obstacle.x = CurrentX;
-				obstacle.y = zoneTop + ((l + 1) * 16) - 1 - obstacle.height;
+				obstacle.spawn(CurrentX, zoneTop + ((l + 1) * 16) - 1 - obstacle.height, l, levelTheme);
+
 				lyrStreetObjects.add(obstacle);
 
 				laneX[l] = CurrentX + obstacle.width + (16 * FlxG.random.int(1, 4));

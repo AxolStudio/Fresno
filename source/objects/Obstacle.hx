@@ -15,11 +15,10 @@ class Obstacle extends FlxSprite
 		kill();
 	}
 
-	public function spawn(LaneNo:Int, LevelTheme:Theme):Void
+	public function spawn(X:Float, Y:Float, LaneNo:Int, LevelTheme:Theme):Void
 	{
-		var vChance:Bool = FlxG.random.bool(60);
-		trace(LaneNo, vChance);
-		if ((LaneNo == 0 || LaneNo == 5) && vChance)
+		reset(X, Y);
+		if ((LaneNo == 0) && FlxG.random.bool(60))
 		{
 			frames = GraphicsCache.loadAtlasFrames("assets/images/vehicles.png", "assets/images/vehicles.xml", false, "vehicles");
 
@@ -42,8 +41,14 @@ class Obstacle extends FlxSprite
 
 		updateHitbox();
         
-		ZHeight = height;
-		offset.y = height - 16;
-		height = 16;
+		var sizes:Array<String> = animation.frameName.split("_");
+
+		ZHeight = Std.parseFloat(sizes[3]);
+		offset.y = height - Std.parseFloat(sizes[2]);
+		height = Std.parseFloat(sizes[2]);
+		width = Std.parseFloat(sizes[1]);
+
+		trace(sizes, width, height, offset.y, ZHeight);
+		
 	}
 }
