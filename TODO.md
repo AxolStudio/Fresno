@@ -8,12 +8,13 @@
     - [x] build decorations randomizer
   - [x] build ground
   - [x] build road
-  - [ ] build obstical layer
+  - [x] build obstical layer
 - [x] build player
 - [ ] build HUD
   - [ ] health
   - [ ] distance
-  - [ ] time
+  - [ ] score
+  - [ ] lives
 - [ ] create powerups
 - [ ] create death state
 - [ ] create win state

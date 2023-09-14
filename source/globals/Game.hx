@@ -22,6 +22,8 @@ class Game
 
 	public static var gameInitialized:Bool = false;
 
+	public static var OUR_BLACK:FlxColor = 0xff344a58;
+
 	public static function initializeGame():Void
 	{
 		if (gameInitialized)

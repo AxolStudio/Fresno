@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TextureAtlas imagePath="camp_objects.png">
+	<!--
+	Created with ShoeBox
+	http://renderhjs.net/shoebox/
+	-->
+	<SubTexture name="heart_empty"	x="0"	y="0"	width="10"	height="8" frameX="-3" frameY="-5" frameWidth="16" frameHeight="16"/>
+	<SubTexture name="heart_filled"	x="0"	y="9"	width="10"	height="8" frameX="-3" frameY="-5" frameWidth="16" frameHeight="16"/>
+</TextureAtlas>

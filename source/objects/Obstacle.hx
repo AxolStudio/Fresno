@@ -17,7 +17,7 @@ class Obstacle extends FlxSprite
 
 	public function spawn(X:Float, Y:Float, LaneNo:Int, LevelTheme:Theme):Void
 	{
-		reset(X, Y);
+
 		if ((LaneNo == 0) && FlxG.random.bool(60))
 		{
 			frames = GraphicsCache.loadAtlasFrames("assets/images/vehicles.png", "assets/images/vehicles.xml", false, "vehicles");
@@ -39,6 +39,7 @@ class Obstacle extends FlxSprite
 			}
 		}
 
+
 		updateHitbox();
         
 		var sizes:Array<String> = animation.frameName.split("_");
@@ -48,7 +49,7 @@ class Obstacle extends FlxSprite
 		height = Std.parseFloat(sizes[2]);
 		width = Std.parseFloat(sizes[1]);
 
-		trace(sizes, width, height, offset.y, ZHeight);
+		reset(X, Y - height);
 		
 	}
 }

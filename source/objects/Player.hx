@@ -1,6 +1,9 @@
 package objects;
 
 
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import states.PlayState;
 import flixel.FlxG;
 import globals.Actions;
 import flixel.FlxSprite;
@@ -15,11 +18,19 @@ class Player extends FlxSprite {
 	public var jumpingHeight:Float = 0;
 	private var jumpVel:Float = 120;
 	private var jumpGravity:Float = 100;
+	public var energy:Int = 0;
+	public var combo:Int = 1;
+	public var score:Int = 0;
+	public var skateTimer:Float = 0;
 
+	public var wasJumpingOver:Array<Obstacle> = [];
 
-	public function new():Void
+	public var state:PlayState;
+
+	public function new(State:PlayState):Void
     {
         super();
+		state = State;
 
 		loadGraphic("assets/images/ash.png", true, 16, 16, false, "player");
 
@@ -29,31 +40,78 @@ class Player extends FlxSprite {
 
 		animation.add("jump", [2], 0, false);
 
-		width = 8;
-		height = 4;
-		offset.x = 4;
-		offset.y = 12;
+		animation.add("skate", [3, 4], 8, true);
+
+		animation.add("skatejump", [5, 6, 7, 8], 8, true);
+
+		animation.add("die", [9], 0, false);
+
+		width = 4;
+		height = 2;
+		offset.x = 6;
+		offset.y = 14;
 
 		maxVelocity.y = 80;
 
-		health = 3;
+		health = 5;
 
 		// FlxG.watch.add(this, "jumping");
 		// FlxG.watch.add(this, "jumpTimer");
-		FlxG.watch.add(this, "jumpingHeight");
+		// FlxG.watch.add(this, "jumpingHeight");
 	}
 
 	override public function hurt(damage:Float):Void
 	{
-		if (FlxFlicker.isFlickering(this))
+		if (FlxFlicker.isFlickering(this) || !alive)
 			return;
 
-		#if !debug
-		super.hurt(damage);
-		#end
+		// #if !debug
+		health = health - damage;
+		// #end
 
-		FlxFlicker.flicker(this, 1);
+		energy = 0;
+		combo = 1;
+		wasJumpingOver = [];
+
+		if (health > 0)
+		{
+			FlxFlicker.flicker(this, 1);
+			if (skateTimer > 0)
+				skateTimer = 0;
+			animation.play("walk", true);
+		}
+		else
+		{
+			alive = false;
+			velocity.x = 0;
+			animation.play("die", true);
+			FlxTween.tween(this, {y: y - 18}, .5, {
+				type: FlxTweenType.ONESHOT,
+				ease: FlxEase.sineIn,
+				onComplete: (_) ->
+				{
+					FlxTween.tween(this, {y: y + FlxG.height}, 0.5, {
+						type: FlxTweenType.ONESHOT,
+						ease: FlxEase.sineOut,
+						onComplete: (_) ->
+						{
+							state.gameOver();
+						}
+					});
+				},
+				startDelay: .1
+			});
+		}
 	}
+
+	public function giveSkateboard():Void
+	{
+		skateTimer += 10;
+		animation.play(jumpingHeight > 0 ? "skateJump" : "skate", true);
+
+		// puff of smoke?
+	}
+
 
 	public function movement(elapsed:Float):Void
 	{
@@ -78,7 +136,7 @@ class Player extends FlxSprite {
 		if (onFloor && !jumping)
 			jumpTimer = 0;
 
-		if (jumpTimer >= 0 && (jump || (jumpTimer > 0 && jumpTimer <= 0.25)))
+		if (jumpTimer >= 0 && (jump || (jumpTimer > 0 && jumpTimer <= (skateTimer > 0 ? 0.75 : 0.25))))
 		{
 			onFloor = false;
 			jumping = true;
@@ -87,23 +145,37 @@ class Player extends FlxSprite {
 		else
 			jumpTimer = -1;
 
-		if (jumpTimer > 0 && jumpTimer < 0.75)
+		if (jumpTimer > 0 && jumpTimer < (skateTimer > 0 ? 1.25 : 0.75))
 		{
 			jumpingHeight += jumpVel * elapsed;
 			if (jumpingHeight > 24)
 				jumpingHeight = 24;
-			animation.play("jump");
+			// animation.play(skateTimer > 0 ? "skatejump" : "jump");
 		}
 		else if (jumpingHeight > 0)
 			jumpingHeight -= jumpGravity * elapsed;
 
 		if (jumpingHeight < 0)
 		{
-
 			jumpingHeight = 0;
 			jumpTimer = -1;
 			onFloor = true;
-			animation.play("walk");
+			// animation.play("walk");
+			if (wasJumpingOver.length > 0)
+			{
+				combo += wasJumpingOver.length;
+				energy++;
+				score += wasJumpingOver.length * combo;
+
+				// if energy maxed, then spawn a powerup!
+				wasJumpingOver = [];
+				if (energy >= 5)
+				{
+					energy = 0;
+					// spawn powerup
+					state.spawnPowerup();
+				}
+			}
 		}
 
 	}
@@ -111,7 +183,31 @@ class Player extends FlxSprite {
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+		if (!alive)
+			return;
 		offset.y = 12 + jumpingHeight;
+		if (skateTimer > 0)
+			skateTimer -= elapsed;
+		updateAnimations();
+	}
+
+	private function updateAnimations():Void
+	{
+		if (animation.name != "idle")
+		{
+			if (jumpingHeight > 0 && !onFloor)
+			{
+				changeAnimation(skateTimer > 0 ? "skatejump" : "jump");
+			}
+			else
+				changeAnimation(skateTimer > 0 ? "skate" : "walk");
+		}
+	}
+
+	public function changeAnimation(NewAnimation:String):Void
+	{
+		if (animation.name != NewAnimation)
+			animation.play(NewAnimation, true);
 	}
 
 }

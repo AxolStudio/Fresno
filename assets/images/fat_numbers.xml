@@ -1,0 +1,23 @@
+<font>
+	<info face="E:\Owner\Documents\fresno\raw\fat_numbers-export" size="16" bold="0"  italic="0"/>
+	<common lineHeight="16" scaleW="54" scaleH="48" pages="1" />
+	<pages>
+		<page id="0" file="E:\Owner\Documents\fresno\raw\fat_numbers-export.png" />
+	</pages>
+	<chars count="12">
+		<char id="48" x="0" y="32" width="13" height="14" xoffset="0" yoffset="2" xadvance="15" /><!-- 0 -->
+		<char id="49" x="43" y="16" width="9" height="14" xoffset="0" yoffset="2" xadvance="11" /><!-- 1 -->
+		<char id="50" x="30" y="0" width="12" height="14" xoffset="0" yoffset="2" xadvance="14" /><!-- 2 -->
+		<char id="51" x="15" y="0" width="13" height="14" xoffset="0" yoffset="2" xadvance="15" /><!-- 3 -->
+		<char id="52" x="0" y="0" width="13" height="14" xoffset="0" yoffset="2" xadvance="15" /><!-- 4 -->
+		<char id="53" x="29" y="32" width="12" height="14" xoffset="0" yoffset="2" xadvance="14" /><!-- 5 -->
+		<char id="54" x="29" y="16" width="12" height="14" xoffset="0" yoffset="2" xadvance="14" /><!-- 6 -->
+		<char id="55" x="15" y="32" width="12" height="14" xoffset="0" yoffset="2" xadvance="14" /><!-- 7 -->
+		<char id="56" x="0" y="16" width="13" height="14" xoffset="0" yoffset="2" xadvance="15" /><!-- 8 -->
+		<char id="57" x="15" y="16" width="12" height="14" xoffset="0" yoffset="2" xadvance="14" /><!-- 9 -->
+		<char id="32" x="0" y="0" width="0" height="0" xoffset="0" yoffset="0" xadvance="4" /><!--   -->
+		<char id="9" x="0" y="0" width="0" height="0" xoffset="0" yoffset="0" xadvance="32" /><!-- 	 -->
+	</chars>
+	<kernings count="0">
+	</kernings>
+</font>

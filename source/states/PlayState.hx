@@ -1,5 +1,9 @@
 package states;
 
+import objects.Powerup;
+import openfl.display.BlendMode;
+import ui.HUD;
+import flixel.util.FlxColor;
 import objects.Obstacle;
 import objects.Shadow;
 import globals.Actions;
@@ -27,15 +31,17 @@ class PlayState extends FlxState
 	public var lyrBackDeco:FlxTypedGroup<Decoration>;
 	public var lyrStreet:FlxTypedGroup<Road>;
 	public var lyrStreetObjects:FlxTypedGroup<Obstacle>;
+	public var lyrPowerups:FlxTypedGroup<Powerup>;
 	public var lyrShadow:FlxTypedGroup<Shadow>;
 	public var lyrPlayer:FlxTypedGroup<Player>;
-	public var lyrFrontDeco:FlxTypedGroup<FlxSprite>;
 
 	public var lyrHUD:FlxTypedGroup<FlxSprite>;
 
 	public var player:Player;
 
-	public var levelSpeed:Float = 100;
+	public var levelSpeed:Float = 0;
+	public var levelSpeedMax:Float = 100;
+	public var levelAcc:Float = 300;
 
 	public var lastObjectX:Float = 0;
 
@@ -48,7 +54,19 @@ class PlayState extends FlxState
 
 	public var laneX:Array<Float>;
 
-	public var difficulty:Float = 0.5;
+	public var difficulty:Float = 2; // 1;
+
+	public var gameStarted:Bool = false;
+
+	public var vignette:FlxSprite;
+
+	public var hud:HUD;
+
+	public var levelDistance:Float = 0;
+
+	public var levelDistanceMax:Float = 120;
+
+	public var levelEndingX:Float = -1;
 	
 
 	public function new():Void
@@ -58,6 +76,7 @@ class PlayState extends FlxState
 		Game.initializeGame();
 
 		levelTheme = WOODS;
+
 	}
 
 	private function makeSky():FlxSprite
@@ -75,10 +94,21 @@ class PlayState extends FlxState
 		add(lyrBackDeco = new FlxTypedGroup<Decoration>());
 		add(lyrStreet = new FlxTypedGroup<Road>());
 		add(lyrStreetObjects = new FlxTypedGroup<Obstacle>());
+		add(lyrPowerups = new FlxTypedGroup<Powerup>());
 		add(lyrShadow = new FlxTypedGroup<Shadow>());
 		add(lyrPlayer = new FlxTypedGroup<Player>());
-		add(lyrFrontDeco = new FlxTypedGroup<FlxSprite>());
-		add(lyrHUD = new FlxTypedGroup<FlxSprite>());
+		vignette = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [
+			Game.OUR_BLACK,
+			Game.OUR_BLACK,
+			FlxColor.TRANSPARENT,
+			FlxColor.TRANSPARENT,
+			FlxColor.TRANSPARENT,
+			Game.OUR_BLACK
+		], 1, 90, true);
+		vignette.alpha = .95;
+		vignette.blend = BlendMode.MULTIPLY;
+		vignette.scrollFactor.set(0, 0);
+		add(vignette);
 
 		createBackground();
 
@@ -90,7 +120,17 @@ class PlayState extends FlxState
 
 		createPlayer();
 
-		movementAllowed = true;
+		add(hud = new HUD(this));
+
+		levelDistance -= FlxG.width / levelSpeedMax;
+
+		FlxG.camera.fade(Game.OUR_BLACK, 1, true, () ->
+		{
+			movementAllowed = true;
+			gameStarted = true;
+			player.animation.play("walk");
+			// player.giveSkateboard();
+		});
 
 		super.create();
 	}
@@ -127,15 +167,37 @@ class PlayState extends FlxState
 		lastObjectX = startX;
 	}
 
+	public function gameOver():Void
+	{
+		// TODO: gameOver
+
+		FlxG.camera.fade(Game.OUR_BLACK, 1, false, () ->
+		{
+			FlxG.switchState(new PlayState());
+		});
+	}
+
+	public function spawnPowerup():Void
+	{
+		var powerup:Powerup = lyrPowerups.recycle(Powerup);
+		if (powerup == null)
+		{
+			powerup = new Powerup();
+		}
+		var pY:Float = FlxG.camera.scroll.x + (FlxG.width / 2);
+		var pX:Float = zoneTop - 4 + (FlxG.random.int(1, 4) * 16);
+		powerup.spawn(pY, pX, [HEALTH, SKATE][FlxG.random.weightedPick([3, 1])]);
+		lyrPowerups.add(powerup);
+	}
+
 	private function createPlayer():Void
 	{
-		player = new Player();
+		player = new Player(this);
 		player.x = 40;
 		player.y = 64 + ((FlxG.height - 64) / 2) - player.height;
 
-		player.velocity.x = levelSpeed;
 
-		player.animation.play("walk");
+		player.animation.play("idle");
 
 		lyrPlayer.add(player);
 
@@ -174,23 +236,75 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 
-		// FlxG.worldBounds.set(FlxG.camera.x, FlxG.camera.y, FlxG.camera.width, FlxG.camera.height);
+		if (!gameStarted || !player.alive)
+			return;
+
+		levelSpeed += levelAcc * elapsed;
+		levelSpeed = Math.min(levelSpeed, levelSpeedMax);
+
+		player.velocity.x = levelSpeed * (player.skateTimer > 0 ? 1.5 : 1);
+		
 
 		checkBackgrounds();
 		if (movementAllowed)
 			player.movement(elapsed);
 		checkBounds();
 		checkCollisions();
+		levelDistance += elapsed;
+
+		if (levelDistance >= levelDistanceMax - (FlxG.width / levelSpeedMax) && levelEndingX == -1)
+		{
+			levelEndingX = FlxG.camera.scroll.x;
+		}
+		if (levelEndingX != -1 && FlxG.camera.scroll.x >= levelEndingX + FlxG.width)
+		{
+			if (FlxG.camera.target != null)
+				FlxG.camera.follow(null);
+			if (player.x > FlxG.camera.scroll.x + FlxG.width)
+			{
+				FlxG.camera.fade(Game.OUR_BLACK, 1, false, () ->
+				{
+					FlxG.switchState(new PlayState());
+				});
+			}
+		}
 	}
 
 	public function checkCollisions():Void
 	{
+		if (!player.alive)
+			return;
 		FlxG.overlap(lyrPlayer, lyrStreetObjects, playerHitObstacle, checkPlayerHitObstacle);
+		FlxG.overlap(lyrPlayer, lyrPowerups, playerHitPowerup, checkPlayerHitPowerup);
+	}
+
+	private function checkPlayerHitPowerup(P:Player, U:Powerup):Bool
+	{
+		return P.alive && P.exists && U.alive && U.exists;
+	}
+
+	private function playerHitPowerup(P:Player, U:Powerup):Void
+	{
+		U.kill();
+		switch (U.type)
+		{
+			case PowerupType.HEALTH:
+				player.health++;
+				if (player.health > 5)
+					player.health = 5;
+
+			case PowerupType.SKATE:
+				player.giveSkateboard();
+		}
 	}
 
 	private function checkPlayerHitObstacle(P:Player, O:Obstacle):Bool
 	{
-		trace(P.jumpingHeight, O.ZHeight);
+		if (P.jumpingHeight > O.ZHeight)
+		{
+			if (!P.wasJumpingOver.contains(O))
+				P.wasJumpingOver.push(O);
+		}
 		return P.jumpingHeight <= O.ZHeight;
 	}
 
@@ -201,6 +315,8 @@ class PlayState extends FlxState
 
 	public function checkBounds():Void
 	{
+		if (!player.alive)
+			return;
 		if (player.y < zoneTop)
 			player.y = zoneTop;
 		else if (player.y + player.height > zoneBottom)
@@ -257,6 +373,8 @@ class PlayState extends FlxState
 	}
 	private function addObstacles(CurrentX:Float):Void
 	{
+		if (levelEndingX != -1)
+			return;
 		for (l in 0...laneX.length)
 		{
 			if (CurrentX >= laneX[l] && FlxG.random.bool(difficulty))
@@ -266,7 +384,7 @@ class PlayState extends FlxState
 				{
 					obstacle = new Obstacle();
 				}
-				obstacle.spawn(CurrentX, zoneTop + ((l + 1) * 16) - 1 - obstacle.height, l, levelTheme);
+				obstacle.spawn(CurrentX, zoneTop + ((l + 1) * 16), l, levelTheme);
 
 				lyrStreetObjects.add(obstacle);
 
