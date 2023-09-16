@@ -18,7 +18,7 @@ class Obstacle extends FlxSprite
 	public function spawn(X:Float, Y:Float, LaneNo:Int, Style:RoadStyle):Void
 	{
 
-		if ((LaneNo == 0) && FlxG.random.bool(60))
+		if ((LaneNo == 0))
 		{
 			if (FlxG.random.bool(Style == STREET ? 30 : 0))
 			{

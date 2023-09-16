@@ -1,5 +1,6 @@
 package globals;
 
+import states.PlayState;
 import flixel.FlxG;
 import axollib.GraphicsCache;
 import flixel.FlxSprite;
@@ -7,6 +8,8 @@ import flixel.util.FlxColor;
 
 class Game
 {
+
+	public static var State:PlayState;
 
 	public static var Backgrounds:Map<String, String>;
 

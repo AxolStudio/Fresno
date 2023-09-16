@@ -1,5 +1,6 @@
 package states;
 
+import objects.Dog;
 import flixel.util.FlxSort;
 import lime.ui.ScanCode;
 import objects.Powerup;
@@ -73,6 +74,8 @@ class PlayState extends FlxState
 		super();
 
 		Game.initializeGame();
+
+		Game.State = this;
 
 		levelTheme = SUBURBS;
 
@@ -394,10 +397,23 @@ class PlayState extends FlxState
 		{
 			if (CurrentX >= laneX[l] && FlxG.random.bool(difficulty))
 			{
-				var obstacle = lyrStreetObjects.recycle(Obstacle);
-				if (obstacle == null)
+				var obstacle = null;
+
+				if (FlxG.random.bool(100))
 				{
-					obstacle = new Obstacle();
+					obstacle = lyrStreetObjects.recycle(Dog);
+					if (obstacle == null)
+					{
+						obstacle = new Dog();
+					}
+				}
+				else
+				{
+					obstacle = lyrStreetObjects.recycle(Obstacle, null, true);
+					if (obstacle == null)
+					{
+						obstacle = new Obstacle();
+					}
 				}
 				obstacle.spawn(CurrentX, zoneTop + ((l + 1) * 16), l, levelTheme == WOODS ? GROUND : STREET);
 
