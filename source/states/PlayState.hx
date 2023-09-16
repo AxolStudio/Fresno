@@ -1,5 +1,6 @@
 package states;
 
+import lime.ui.ScanCode;
 import objects.Powerup;
 import openfl.display.BlendMode;
 import ui.HUD;
@@ -185,9 +186,24 @@ class PlayState extends FlxState
 			powerup = new Powerup();
 		}
 		var pY:Float = FlxG.camera.scroll.x + (FlxG.width / 2);
-		var pX:Float = zoneTop - 4 + (FlxG.random.int(1, 4) * 16);
-		powerup.spawn(pY, pX, [HEALTH, SKATE][FlxG.random.weightedPick([3, 1])]);
+		var pX:Float = zoneTop + (FlxG.random.int(1, 4) * 16);
+		if (FlxG.random.bool(1 - (player.health / 5)))
+		{
+			powerup.spawn(pY, pX, HEALTH);
+		}
+		else
+		{
+			powerup.spawn(pY, pX, SKATE);
+		}
 		lyrPowerups.add(powerup);
+		var shadow:Shadow = lyrShadow.recycle(Shadow);
+		if (shadow == null)
+		{
+			shadow = new Shadow();
+		}
+		shadow.spawn(powerup);
+		lyrShadow.add(shadow);
+
 	}
 
 	private function createPlayer():Void
@@ -201,7 +217,9 @@ class PlayState extends FlxState
 
 		lyrPlayer.add(player);
 
-		lyrShadow.add(new Shadow(player));
+		var shad:Shadow = new Shadow();
+		lyrShadow.add(shad);
+		shad.spawn(player);
 
 		// add(playerHitbox);
 

@@ -107,7 +107,7 @@ class Player extends FlxSprite {
 	public function giveSkateboard():Void
 	{
 		skateTimer += 10;
-		animation.play(jumpingHeight > 0 ? "skateJump" : "skate", true);
+		animation.play(jumpingHeight > 0 ? "skatejump" : "skate", true);
 
 		// puff of smoke?
 	}
@@ -118,6 +118,7 @@ class Player extends FlxSprite {
 		var up:Bool = Actions.up.triggered;
 		var down:Bool = Actions.down.triggered;
 
+		if (up && down)
 		if (up && down)
 			up = down = false;
 
@@ -164,14 +165,15 @@ class Player extends FlxSprite {
 			if (wasJumpingOver.length > 0)
 			{
 				combo += wasJumpingOver.length;
-				energy++;
+				energy += wasJumpingOver.length;
+
 				score += wasJumpingOver.length * combo;
 
 				// if energy maxed, then spawn a powerup!
 				wasJumpingOver = [];
 				if (energy >= 5)
 				{
-					energy = 0;
+					energy -= 5;
 					// spawn powerup
 					state.spawnPowerup();
 				}

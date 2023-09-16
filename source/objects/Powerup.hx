@@ -10,6 +10,8 @@ class Powerup extends FlxSprite
 	{
 		super();
 		loadGraphic("assets/images/powerups.png", true, 16, 16, false, "powerups");
+		width = height = 16;
+		offset.y = 8;
 		kill();
 	}
 
