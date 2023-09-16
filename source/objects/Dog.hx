@@ -22,6 +22,7 @@ class Dog extends Obstacle
 		offset.y = height - 4;
 		height = 4;
 		width = 14;
+        offset.x  = 5;
 
 		kill();
 	}

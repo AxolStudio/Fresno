@@ -1,5 +1,6 @@
 package states;
 
+import objects.Skunk;
 import objects.Dog;
 import flixel.util.FlxSort;
 import lime.ui.ScanCode;
@@ -401,10 +402,15 @@ class PlayState extends FlxState
 
 				if (FlxG.random.bool(100))
 				{
-					obstacle = lyrStreetObjects.recycle(Dog);
+					// obstacle = lyrStreetObjects.recycle(Dog);
+					// if (obstacle == null)
+					// {
+					// 	obstacle = new Dog();
+					// }
+					obstacle = lyrStreetObjects.recycle(Skunk);
 					if (obstacle == null)
 					{
-						obstacle = new Dog();
+						obstacle = new Skunk();
 					}
 				}
 				else
