@@ -1,5 +1,6 @@
 package states;
 
+import flixel.util.FlxSort;
 import lime.ui.ScanCode;
 import objects.Powerup;
 import openfl.display.BlendMode;
@@ -25,9 +26,6 @@ class PlayState extends FlxState
 {
 	public var levelTheme:globals.Game.Theme;
 
-	public var lyrSky:FlxSprite; // the actual background sky colors
-	public var lyrSkyStuff:FlxTypedGroup<FlxSprite>; // stars, moon, sun
-	public var lyrClouds:FlxTypedGroup<FlxSprite>; // clouds
 	public var lyrBackground:FlxTypedGroup<FlxSprite>; // background repeating images
 	public var lyrBackDeco:FlxTypedGroup<Decoration>;
 	public var lyrStreet:FlxTypedGroup<Road>;
@@ -65,7 +63,7 @@ class PlayState extends FlxState
 
 	public var levelDistance:Float = 0;
 
-	public var levelDistanceMax:Float = 120;
+	public var levelDistanceMax:Float = 12000;
 
 	public var levelEndingX:Float = -1;
 	
@@ -76,23 +74,17 @@ class PlayState extends FlxState
 
 		Game.initializeGame();
 
-		levelTheme = WOODS;
+		levelTheme = SUBURBS;
 
 	}
 
-	private function makeSky():FlxSprite
-	{
-		return FlxGradient.createGradientFlxSprite(FlxG.width, Math.ceil(FlxG.height / 6), Game.SkyGradients.get(levelTheme).copy(), 1, -90, true);
-	}
 
 	override public function create()
 	{
-		add(lyrSky = makeSky());
-		lyrSky.scrollFactor.set(0, 0);
-		add(lyrSkyStuff = new FlxTypedGroup<FlxSprite>());
-		add(lyrClouds = new FlxTypedGroup<FlxSprite>());
+
 		add(lyrBackground = new FlxTypedGroup<FlxSprite>());
-		add(lyrBackDeco = new FlxTypedGroup<Decoration>());
+		if (levelTheme == WOODS)
+			add(lyrBackDeco = new FlxTypedGroup<Decoration>());
 		add(lyrStreet = new FlxTypedGroup<Road>());
 		add(lyrStreetObjects = new FlxTypedGroup<Obstacle>());
 		add(lyrPowerups = new FlxTypedGroup<Powerup>());
@@ -113,7 +105,8 @@ class PlayState extends FlxState
 
 		createBackground();
 
-		createStartingDeco();
+		if (levelTheme == WOODS)
+			createStartingDeco();
 
 		createStartingRoad();
 
@@ -123,7 +116,7 @@ class PlayState extends FlxState
 
 		add(hud = new HUD(this));
 
-		levelDistance -= FlxG.width / levelSpeedMax;
+		levelDistance = -FlxG.width;
 
 		FlxG.camera.fade(Game.OUR_BLACK, 1, true, () ->
 		{
@@ -244,7 +237,7 @@ class PlayState extends FlxState
 		for (i in 0...Math.ceil(FlxG.width / 16) + 1)
 		{
 			lyrStreet.add(road = new Road());
-			road.regen(levelTheme);
+			road.regen(levelTheme == WOODS ? GROUND : STREET);
 			road.x = i * 16;
 			road.y = roadY;
 		}
@@ -260,6 +253,8 @@ class PlayState extends FlxState
 		levelSpeed += levelAcc * elapsed;
 		levelSpeed = Math.min(levelSpeed, levelSpeedMax);
 
+		levelDistance += player.velocity.x * elapsed;
+		
 		player.velocity.x = levelSpeed * (player.skateTimer > 0 ? 1.5 : 1);
 		
 
@@ -268,9 +263,8 @@ class PlayState extends FlxState
 			player.movement(elapsed);
 		checkBounds();
 		checkCollisions();
-		levelDistance += elapsed;
 
-		if (levelDistance >= levelDistanceMax - (FlxG.width / levelSpeedMax) && levelEndingX == -1)
+		if (levelDistance >= levelDistanceMax && levelEndingX == -1)
 		{
 			levelEndingX = FlxG.camera.scroll.x;
 		}
@@ -353,17 +347,20 @@ class PlayState extends FlxState
 			lyrBackground.add(bg);
 		}
 
-		var deco:Decoration = lyrBackDeco.members[0];
-		if (deco.x + deco.width < camera.scroll.x - 32)
+		if (levelTheme == WOODS)
 		{
-			lyrBackDeco.remove(deco, true);
+			var deco:Decoration = lyrBackDeco.members[0];
+			if (deco.x + deco.width < camera.scroll.x - 32)
+			{
+				lyrBackDeco.remove(deco, true);
 
-			deco.regen();
-			deco.x = Math.max(FlxG.width + camera.scroll.x + 1, lastObjectX);
-			deco.y = 64 - FlxG.random.int(0, 16) - deco.height;
-			lastObjectX = deco.x + deco.width + (16 * FlxG.random.int(1, 4));
+				deco.regen();
+				deco.x = Math.max(FlxG.width + camera.scroll.x + 1, lastObjectX);
+				deco.y = 64 - FlxG.random.int(0, 16) - deco.height;
+				lastObjectX = deco.x + deco.width + (16 * FlxG.random.int(1, 4));
 
-			lyrBackDeco.add(deco);
+				lyrBackDeco.add(deco);
+			}
 		}
 
 		for (o in lyrStreetObjects)
@@ -379,7 +376,7 @@ class PlayState extends FlxState
 		{
 			lyrStreet.remove(road, true);
 
-			road.regen(levelTheme);
+			road.regen(levelTheme == WOODS ? GROUND : STREET);
 			road.x = lyrStreet.members[lyrStreet.length - 1].x + lyrStreet.members[lyrStreet.length - 1].width;
 			road.y = roadY;
 
@@ -402,7 +399,7 @@ class PlayState extends FlxState
 				{
 					obstacle = new Obstacle();
 				}
-				obstacle.spawn(CurrentX, zoneTop + ((l + 1) * 16), l, levelTheme);
+				obstacle.spawn(CurrentX, zoneTop + ((l + 1) * 16), l, levelTheme == WOODS ? GROUND : STREET);
 
 				lyrStreetObjects.add(obstacle);
 
@@ -410,5 +407,16 @@ class PlayState extends FlxState
 			}
 		}
 
+		lyrStreetObjects.sort(sortObjects, FlxSort.ASCENDING);
+	}
+
+	private function sortObjects(Direction:Int, A:Obstacle, B:Obstacle):Int
+	{
+		if (A.y + A.height > B.y + B.height)
+			return 1;
+		else if (A.y + A.height < B.y + B.height)
+			return -1;
+		else
+			return 0;
 	}
 }

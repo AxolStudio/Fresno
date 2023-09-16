@@ -4,12 +4,12 @@
 	Created with ShoeBox
 	http://renderhjs.net/shoebox/
 	-->
-	<SubTexture name="obj_10_8_14"	x="34"	y="13"	width="11"	height="14" frameX="-3" frameY="-1" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="obj_16_12_0"	x="0"	y="0"	width="19"	height="12" frameX="-0" frameY="-3" frameWidth="19" frameHeight="16"/>
-	<SubTexture name="obj_16_16_11"	x="20"	y="0"	width="16"	height="12" frameX="-0" frameY="-2" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="obj_16_16_13"	x="17"	y="28"	width="16"	height="14" frameX="-0" frameY="-1" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="obj_16_16_14"	x="17"	y="13"	width="16"	height="14" frameX="-0" frameY="-1" frameWidth="16" frameHeight="16"/>
+	<SubTexture name="obj_10_8_14"	x="34"	y="13"	width="11"	height="14" frameX="-0" frameY="-0" frameWidth="11" frameHeight="14"/>
+	<SubTexture name="obj_16_12_0"	x="0"	y="0"	width="19"	height="12" frameX="-0" frameY="-0" frameWidth="19" frameHeight="12"/>
+	<SubTexture name="obj_16_16_11"	x="20"	y="0"	width="16"	height="12" frameX="-0" frameY="-0" frameWidth="16" frameHeight="12"/>
+	<SubTexture name="obj_16_16_13"	x="17"	y="28"	width="16"	height="14" frameX="-0" frameY="-0" frameWidth="16" frameHeight="14"/>
+	<SubTexture name="obj_16_16_14"	x="17"	y="13"	width="16"	height="14" frameX="-0" frameY="-0" frameWidth="16" frameHeight="14"/>
 	<SubTexture name="obj_16_16_16"	x="0"	y="28"	width="16"	height="16" frameX="-0" frameY="-0" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="obj_16_16_5"	x="0"	y="13"	width="16"	height="14" frameX="-0" frameY="-1" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="obj_8_16_5"	x="34"	y="28"	width="9"	height="16" frameX="-4" frameY="-0" frameWidth="16" frameHeight="16"/>
+	<SubTexture name="obj_16_16_5"	x="0"	y="13"	width="16"	height="14" frameX="-0" frameY="-0" frameWidth="16" frameHeight="14"/>
+	<SubTexture name="obj_8_16_5"	x="34"	y="28"	width="9"	height="16" frameX="-0" frameY="-0" frameWidth="9" frameHeight="16"/>
 </TextureAtlas>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TextureAtlas imagePath="city_side_objects.png">
+	<!--
+	Created with ShoeBox
+	http://renderhjs.net/shoebox/
+	-->
+	<SubTexture name="obj2_29_16_10"	x="30"	y="0"	width="29"	height="40" frameX="-0" frameY="-0" frameWidth="29" frameHeight="40"/>
+	<SubTexture name="obj3_29_16_10"	x="60"	y="0"	width="29"	height="40" frameX="-0" frameY="-0" frameWidth="29" frameHeight="40"/>
+	<SubTexture name="obj4_29_16_10"	x="30"	y="41"	width="29"	height="27" frameX="-0" frameY="-0" frameWidth="29" frameHeight="27"/>
+	<SubTexture name="obj5_29_16_10"	x="60"	y="41"	width="29"	height="27" frameX="-0" frameY="-0" frameWidth="29" frameHeight="27"/>
+	<SubTexture name="obj6_29_16_10"	x="0"	y="41"	width="29"	height="40" frameX="-0" frameY="-0" frameWidth="29" frameHeight="40"/>
+	<SubTexture name="obj_29_16_10"	x="0"	y="0"	width="29"	height="40" frameX="-0" frameY="-0" frameWidth="29" frameHeight="40"/>
+</TextureAtlas>

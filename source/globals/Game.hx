@@ -7,18 +7,19 @@ import flixel.util.FlxColor;
 
 class Game
 {
-	public static var SkyGradients:Map<String, Array<FlxColor>>;
 
 	public static var Backgrounds:Map<String, String>;
 
 	public static var Decorations:Map<String, Array<String>>;
 	public static var DecorationsRarity:Map<String, Array<Float>>;
 
-	public static var Obstacles:Map<String, Array<String>>;
-	public static var ObstaclesRarity:Map<String, Array<Float>>;
+	public static var Obstacles:Map<RoadStyle, Array<String>>;
+	public static var ObstaclesRarity:Map<RoadStyle, Array<Float>>;
 
 	public static var Vehicles:Array<String>;
 	public static var VehiclesRarity:Array<Float>;
+	public static var StreetSideObjs:Array<String>;
+	public static var StreetSideObjsRarity:Array<Float>;
 
 	public static var gameInitialized:Bool = false;
 
@@ -31,7 +32,6 @@ class Game
 
 		Actions.init();
 
-		buildSkyGradients();
 
 		buildBackgrounds();
 
@@ -40,20 +40,13 @@ class Game
 		buildObstacles();
 	}
 
-	private static function buildSkyGradients():Void
-	{
-		SkyGradients = [];
-
-		var woods:Array<FlxColor> = [0xfff5d1c3, 0xfff2c5cc, 0xffbdd8e0, 0xff97e7ee, 0xff62ecf8];
-		SkyGradients.set(WOODS, woods);
-	}
 
 	private static function buildBackgrounds():Void
 	{
 		Backgrounds = [];
 
 		Backgrounds[WOODS] = "assets/images/forest_back.png";
-		// Backgrounds[Theme.SUBURBS] = "assets/images/backgrounds/suburbs.png";
+		Backgrounds[SUBURBS] = "assets/images/suburbs_back.png";
 		// Backgrounds[Theme.CITY] = "assets/images/backgrounds/city.png";
 	}
 
@@ -63,6 +56,8 @@ class Game
 
 		var woods:Array<String> = [];
 		var woodRarity:Array<Float> = [];
+		var suburbs:Array<String> = [];
+		var suburbsRarity:Array<Float> = [];
 
 		var s:FlxSprite = new FlxSprite();
 		s.frames = GraphicsCache.loadAtlasFrames("assets/images/camp_objects.png", "assets/images/camp_objects.xml", false, "camp_objects");
@@ -73,8 +68,20 @@ class Game
 			woodRarity.push(1 - (s.width / 16 / 100));
 		}
 
-		Obstacles.set(WOODS, woods);
-		ObstaclesRarity.set(WOODS, woodRarity);
+		Obstacles.set(GROUND, woods);
+		ObstaclesRarity.set(GROUND, woodRarity);
+
+		s.frames = GraphicsCache.loadAtlasFrames("assets/images/street_objects.png", "assets/images/street_objects.xml", false, "street_objects");
+		for (f in 0...s.animation.numFrames)
+		{
+			s.animation.frameIndex = f;
+			suburbs.push(s.animation.frameName);
+			suburbsRarity.push(1 - (s.width / 16 / 100));
+		}
+
+		Obstacles.set(STREET, suburbs);
+		ObstaclesRarity.set(STREET, suburbsRarity);
+
 
 		Vehicles = [];
 		VehiclesRarity = [];
@@ -93,6 +100,24 @@ class Game
 
 		Vehicles = vehicles;
 		VehiclesRarity = vehicleRarity;
+
+		StreetSideObjs = [];
+		StreetSideObjsRarity = [];
+
+		var sideObjs:Array<String> = [];
+		var sideObjsRarity:Array<Float> = [];
+
+		s = new FlxSprite();
+		s.frames = GraphicsCache.loadAtlasFrames("assets/images/city_side_objects.png", "assets/images/city_side_objects.xml", false, "city_side_objects");
+		for (f in 0...s.animation.numFrames)
+		{
+			s.animation.frameIndex = f;
+			sideObjs.push(s.animation.frameName);
+			sideObjsRarity.push(1 - (s.width / 16 / 100));
+		}
+
+		StreetSideObjs = sideObjs;
+		StreetSideObjsRarity = sideObjsRarity;
 
 	}
 
@@ -127,4 +152,10 @@ enum abstract Theme(String) from String to String
 	var WOODS = "woods";
 	var SUBURBS = "suburbs";
 	var CITY = "city";
+}
+
+enum abstract RoadStyle(String) from String to String
+{
+	var GROUND = "ground";
+	var STREET = "street";
 }

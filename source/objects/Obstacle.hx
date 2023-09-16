@@ -15,27 +15,39 @@ class Obstacle extends FlxSprite
 		kill();
 	}
 
-	public function spawn(X:Float, Y:Float, LaneNo:Int, LevelTheme:Theme):Void
+	public function spawn(X:Float, Y:Float, LaneNo:Int, Style:RoadStyle):Void
 	{
 
 		if ((LaneNo == 0) && FlxG.random.bool(60))
 		{
+			if (FlxG.random.bool(Style == STREET ? 30 : 0))
+			{
+				frames = GraphicsCache.loadAtlasFrames("assets/images/city_side_objects.png", "assets/images/city_side_objects.xml", false,
+					"city_side_objects");
+
+				animation.frameName = Game.StreetSideObjs[FlxG.random.weightedPick(Game.StreetSideObjsRarity)];
+			}
+			else
+			{
 			frames = GraphicsCache.loadAtlasFrames("assets/images/vehicles.png", "assets/images/vehicles.xml", false, "vehicles");
 
 			animation.frameName = Game.Vehicles[FlxG.random.weightedPick(Game.VehiclesRarity)];
+			}
 		}
 		else
 		{
-			switch (LevelTheme)
+			switch (Style)
 			{
-				case WOODS:
+				case GROUND:
 					frames = GraphicsCache.loadAtlasFrames("assets/images/camp_objects.png", "assets/images/camp_objects.xml", false, "camp_objects");
 
-					animation.frameName = Game.Obstacles.get(LevelTheme)[FlxG.random.weightedPick(Game.ObstaclesRarity.get(LevelTheme))];
+					animation.frameName = Game.Obstacles.get(Style)[FlxG.random.weightedPick(Game.ObstaclesRarity.get(Style))];
 
-				case CITY:
+				case STREET:
+					frames = GraphicsCache.loadAtlasFrames("assets/images/street_objects.png", "assets/images/street_objects.xml", false, "street_objects");
 
-				case SUBURBS:
+					animation.frameName = Game.Obstacles.get(Style)[FlxG.random.weightedPick(Game.ObstaclesRarity.get(Style))];
+
 			}
 		}
 
@@ -49,7 +61,10 @@ class Obstacle extends FlxSprite
 		height = Std.parseFloat(sizes[2]);
 		width = Std.parseFloat(sizes[1]);
 
-		reset(X, Y - height);
+		var newX:Float = X + 8 - Std.int(Math.min(8, width / 2));
+		var newY:Float = Y - (height + Math.max(0, 16 - height));
+
+		reset(newX, newY);
 		
 	}
 }

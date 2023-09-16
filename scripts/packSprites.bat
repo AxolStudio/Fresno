@@ -51,3 +51,37 @@ IF NOT EXIST E:\Owner\Documents\fresno\raw\camp-objects\camp_objects.png ECHO "F
 START /B MOVE /Y "E:\Owner\Documents\fresno\raw\camp-objects\camp_objects.*" "E:\Owner\Documents\fresno\assets\images" 
 
 IF %ERRORLEVEL% GTR 0 EXIT /B %ERRORLEVEL%
+
+ECHO "Packing Street Obstacles"
+
+IF EXIST E:\Owner\Documents\fresno\raw\street-objects\street_objects.xml DEL /F /Q E:\Owner\Documents\fresno\raw\street-objects\street_objects.xml
+
+IF EXIST E:\Owner\Documents\fresno\raw\street-objects\street_objects.png DEL /F /Q E:\Owner\Documents\fresno\raw\street-objects\street_objects.png
+
+START /B /W CMD /C ""E:\Program Files (x86)\ShoeBox\ShoeBox.exe" "plugin=shoebox.plugin.spriteSheet::PluginCreateSpriteSheet" "files=E:\Owner\Documents\fresno\raw\street-objects" "renderDebugLayer=false" "texPowerOfTwo=false" "fileName=street_objects.xml" "useCssOverHack=false" "texPadding=1" "animationNameIds=####" "scale=1" "fileGenerate2xSize=false" "animationMaxFrames=1000" "animationFrameIdStart=0" "texMaxSize=2048" "texCropAlpha=true" "texExtrudeSize=0" "texSquare=false" fileFormatLoop="\t^<SubTexture name=\"@ID\"\tx=\"@x\"\ty=\"@y\"\twidth=\"@w\"\theight=\"@h\" frameX=\"-@fx\" frameY=\"-@fy\" frameWidth=\"@fw\" frameHeight=\"@fh\"/^>\n""
+
+
+IF %ERRORLEVEL% GTR 0 EXIT /B %ERRORLEVEL%
+
+IF NOT EXIST E:\Owner\Documents\fresno\raw\street-objects\street_objects.png ECHO "FILE MISSING!" && EXIT /B 1
+
+START /B MOVE /Y "E:\Owner\Documents\fresno\raw\street-objects\street_objects.*" "E:\Owner\Documents\fresno\assets\images" 
+
+IF %ERRORLEVEL% GTR 0 EXIT /B %ERRORLEVEL%
+
+ECHO "Packing Side-Street Obstacles"
+
+IF EXIST E:\Owner\Documents\fresno\raw\city-side-objects\city_side_objects.xml DEL /F /Q E:\Owner\Documents\fresno\raw\city-side-objects\city_side_objects.xml
+
+IF EXIST E:\Owner\Documents\fresno\raw\city-side-objects\city_side_objects.png DEL /F /Q E:\Owner\Documents\fresno\raw\city-side-objects\city_side_objects.png
+
+START /B /W CMD /C ""E:\Program Files (x86)\ShoeBox\ShoeBox.exe" "plugin=shoebox.plugin.spriteSheet::PluginCreateSpriteSheet" "files=E:\Owner\Documents\fresno\raw\city-side-objects" "renderDebugLayer=false" "texPowerOfTwo=false" "fileName=city_side_objects.xml" "useCssOverHack=false" "texPadding=1" "animationNameIds=####" "scale=1" "fileGenerate2xSize=false" "animationMaxFrames=1000" "animationFrameIdStart=0" "texMaxSize=2048" "texCropAlpha=true" "texExtrudeSize=0" "texSquare=false" fileFormatLoop="\t^<SubTexture name=\"@ID\"\tx=\"@x\"\ty=\"@y\"\twidth=\"@w\"\theight=\"@h\" frameX=\"-@fx\" frameY=\"-@fy\" frameWidth=\"@fw\" frameHeight=\"@fh\"/^>\n""
+
+
+IF %ERRORLEVEL% GTR 0 EXIT /B %ERRORLEVEL%
+
+IF NOT EXIST E:\Owner\Documents\fresno\raw\city-side-objects\city_side_objects.png ECHO "FILE MISSING!" && EXIT /B 1
+
+START /B MOVE /Y "E:\Owner\Documents\fresno\raw\city-side-objects\city_side_objects.*" "E:\Owner\Documents\fresno\assets\images" 
+
+IF %ERRORLEVEL% GTR 0 EXIT /B %ERRORLEVEL%
