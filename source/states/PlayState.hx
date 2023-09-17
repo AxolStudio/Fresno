@@ -1,5 +1,7 @@
 package states;
 
+import flixel.input.actions.FlxActionInput;
+import objects.IAnimal;
 import objects.Skunk;
 import objects.Dog;
 import flixel.util.FlxSort;
@@ -55,7 +57,7 @@ class PlayState extends FlxState
 
 	public var laneX:Array<Float>;
 
-	public var difficulty:Float = 2; // 1;
+	public var difficulty:Float = 0;
 
 	public var gameStarted:Bool = false;
 
@@ -65,42 +67,30 @@ class PlayState extends FlxState
 
 	public var levelDistance:Float = 0;
 
-	public var levelDistanceMax:Float = 12000;
+	public var levelDistanceMax:Float = 0;
 
 	public var levelEndingX:Float = -1;
-	
-
-	public function new():Void
-	{
-		super();
-
-		Game.initializeGame();
-
-		Game.State = this;
-
-		levelTheme = SUBURBS;
-
-	}
 
 
 	override public function create()
 	{
 
+
+		Game.State = this;
+
+		levelTheme = Game.LevelThemes.get(Game.CurrentLevel);
+
 		add(lyrBackground = new FlxTypedGroup<FlxSprite>());
 		if (levelTheme == WOODS)
 			add(lyrBackDeco = new FlxTypedGroup<Decoration>());
 		add(lyrStreet = new FlxTypedGroup<Road>());
+		add(lyrShadow = new FlxTypedGroup<Shadow>());
 		add(lyrStreetObjects = new FlxTypedGroup<Obstacle>());
 		add(lyrPowerups = new FlxTypedGroup<Powerup>());
-		add(lyrShadow = new FlxTypedGroup<Shadow>());
 		add(lyrPlayer = new FlxTypedGroup<Player>());
 		vignette = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [
-			Game.OUR_BLACK,
-			Game.OUR_BLACK,
-			FlxColor.TRANSPARENT,
-			FlxColor.TRANSPARENT,
-			FlxColor.TRANSPARENT,
-			Game.OUR_BLACK
+			Game.OUR_BLACK, Game.OUR_BLACK, Game.OUR_BLACK, Game.OUR_BLACK, FlxColor.TRANSPARENT, FlxColor.TRANSPARENT, FlxColor.TRANSPARENT,
+			FlxColor.TRANSPARENT, FlxColor.TRANSPARENT, FlxColor.TRANSPARENT, Game.OUR_BLACK
 		], 1, 90, true);
 		vignette.alpha = .95;
 		vignette.blend = BlendMode.MULTIPLY;
@@ -118,9 +108,13 @@ class PlayState extends FlxState
 
 		createPlayer();
 
+		levelDistanceMax = Game.LevelLengths.get(levelTheme);
+
 		add(hud = new HUD(this));
 
 		levelDistance = -FlxG.width;
+
+		difficulty = Game.StartingDifficulty.get(levelTheme);
 
 		FlxG.camera.fade(Game.OUR_BLACK, 1, true, () ->
 		{
@@ -167,11 +161,10 @@ class PlayState extends FlxState
 
 	public function gameOver():Void
 	{
-		// TODO: gameOver
-
 		FlxG.camera.fade(Game.OUR_BLACK, 1, false, () ->
 		{
-			FlxG.switchState(new PlayState());
+			// FlxG.switchState(new PlayState());
+			FlxG.resetState();
 		});
 	}
 
@@ -193,14 +186,18 @@ class PlayState extends FlxState
 			powerup.spawn(pY, pX, SKATE);
 		}
 		lyrPowerups.add(powerup);
+		addShadow(powerup);
+	}
+
+	public function addShadow(Target:FlxSprite):Void
+	{
 		var shadow:Shadow = lyrShadow.recycle(Shadow);
 		if (shadow == null)
 		{
 			shadow = new Shadow();
 		}
-		shadow.spawn(powerup);
+		shadow.spawn(Target);
 		lyrShadow.add(shadow);
-
 	}
 
 	private function createPlayer():Void
@@ -208,7 +205,6 @@ class PlayState extends FlxState
 		player = new Player(this);
 		player.x = 40;
 		player.y = 64 + ((FlxG.height - 64) / 2) - player.height;
-
 
 		player.animation.play("idle");
 
@@ -223,7 +219,6 @@ class PlayState extends FlxState
 		FlxG.camera.follow(player);
 		FlxG.camera.deadzone = FlxRect.get(40, 80, 0, FlxG.height - 80);
 		FlxG.camera.setScrollBoundsRect(0, 0, 1000000, FlxG.height, true);
-
 	}
 
 	private function createBackground():Void
@@ -258,9 +253,8 @@ class PlayState extends FlxState
 		levelSpeed = Math.min(levelSpeed, levelSpeedMax);
 
 		levelDistance += player.velocity.x * elapsed;
-		
+
 		player.velocity.x = levelSpeed * (player.skateTimer > 0 ? 1.5 : 1);
-		
 
 		checkBackgrounds();
 		if (movementAllowed)
@@ -280,7 +274,16 @@ class PlayState extends FlxState
 			{
 				FlxG.camera.fade(Game.OUR_BLACK, 1, false, () ->
 				{
-					FlxG.switchState(new PlayState());
+					Game.Scores.set(Game.CurrentLevel, player.score);
+					if (Game.CurrentLevel < 1)
+					{
+						Game.CurrentLevel++;
+						FlxG.switchState(new PlayState());
+					}
+					else
+					{
+						// game win!?
+					}
 				});
 			}
 		}
@@ -367,14 +370,6 @@ class PlayState extends FlxState
 			}
 		}
 
-		for (o in lyrStreetObjects)
-		{
-			if (o.x + o.width < camera.scroll.x - 32)
-			{
-				o.kill();
-			}
-		}
-
 		var road:Road = lyrStreet.members[0];
 		if (road.x + road.width < camera.scroll.x)
 		{
@@ -385,11 +380,12 @@ class PlayState extends FlxState
 			road.y = roadY;
 
 			lyrStreet.add(road);
-			difficulty += .01;
+			difficulty += Game.DifficultyRate.get(levelTheme);
 
 			addObstacles(road.x);
 		}
 	}
+
 	private function addObstacles(CurrentX:Float):Void
 	{
 		if (levelEndingX != -1)
@@ -400,18 +396,18 @@ class PlayState extends FlxState
 			{
 				var obstacle = null;
 
-				if (FlxG.random.bool(100))
+				if (FlxG.random.bool(20))
 				{
-					// obstacle = lyrStreetObjects.recycle(Dog);
-					// if (obstacle == null)
-					// {
-					// 	obstacle = new Dog();
-					// }
-					obstacle = lyrStreetObjects.recycle(Skunk);
+					var which:Class<Obstacle> = cast Game.Animals.get(levelTheme)[FlxG.random.weightedPick(Game.AnimalsRarity.get(levelTheme))];
+
+					obstacle = lyrStreetObjects.recycle(which);
 					if (obstacle == null)
 					{
-						obstacle = new Skunk();
+						obstacle = Type.createInstance(which, null);
 					}
+					addShadow(obstacle);
+
+
 				}
 				else
 				{

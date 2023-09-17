@@ -62,7 +62,7 @@ class Actions
 
 		menuIndex = Actions.actions.addSet(menuSet);
 
-		var gameSet:FlxActionSet = new FlxActionSet("GameControls", [Actions.up, Actions.down, Actions.jump, Actions.pause], [Actions.leftStick]);
+		var gameSet:FlxActionSet = new FlxActionSet("GameControls", [Actions.up, Actions.down, Actions.jump, Actions.pause, Actions.any], [Actions.leftStick]);
 
 		gameIndex = Actions.actions.addSet(gameSet);
 
@@ -123,6 +123,11 @@ class Actions
 
 		Actions.any.addKey(ANY, JUST_RELEASED);
 
-		Actions.actions.activateSet(Actions.gameIndex, FlxInputDevice.ALL, FlxInputDeviceID.ALL);
+		setActive(gameIndex);
+	}
+
+	public static function setActive(index:Int):Void
+	{
+		Actions.actions.activateSet(index, FlxInputDevice.ALL, FlxInputDeviceID.ALL);
 	}
 }

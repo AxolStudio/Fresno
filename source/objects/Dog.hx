@@ -6,7 +6,7 @@ import flixel.FlxG;
 import globals.Game;
 import flixel.FlxSprite;
 
-class Dog extends Obstacle
+class Dog extends Obstacle implements IAnimal
 {
 	public function new():Void
 	{
@@ -22,7 +22,7 @@ class Dog extends Obstacle
 		offset.y = height - 4;
 		height = 4;
 		width = 14;
-        offset.x  = 5;
+		offset.x = 5;
 
 		kill();
 	}
@@ -52,7 +52,7 @@ class Dog extends Obstacle
 			}
 		}
 
-		if (x < FlxG.camera.scroll.x - 16)
+		if (x + width < FlxG.camera.scroll.x - 16)
 		{
 			kill();
 		}

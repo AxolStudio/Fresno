@@ -3,7 +3,7 @@ package objects;
 import flixel.FlxG;
 import globals.Game;
 
-class Skunk extends Obstacle
+class Skunk extends Obstacle implements IAnimal
 {
 	public function new():Void
 	{
@@ -23,7 +23,7 @@ class Skunk extends Obstacle
 			if (name == "spray")
 			{
 				animation.play("run", true);
-				velocity.x = 160;
+				velocity.x = 200;
 			}
 		}
 
@@ -46,6 +46,7 @@ class Skunk extends Obstacle
 		var newY:Float = Y - (height + Math.max(0, 16 - height));
 		reset(newX, newY);
 	}
+
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
@@ -59,7 +60,7 @@ class Skunk extends Obstacle
 			}
 		}
 
-		if (x < FlxG.camera.scroll.x - 16)
+		if (x + width < FlxG.camera.scroll.x - 16 || x > FlxG.camera.scroll.x + FlxG.width + 16)
 		{
 			kill();
 		}

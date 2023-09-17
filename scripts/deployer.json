@@ -1,0 +1,14 @@
+{
+    "projectPath": "E:\\Owner\\Documents\\fresno",
+    "buildOptions": [
+        {
+            "key": "1",
+            "platform": "html5",
+            "destination": "itch",
+            "demo": false,
+            "testing": false,
+            "credentials": "axolstudio/long-road-to-fresno",
+            "description": "Itch for [HTML5]"
+        }
+    ]
+}

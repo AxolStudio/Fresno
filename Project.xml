@@ -30,7 +30,18 @@
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 
-	<set name="BUILD_DIR" value="export" />
+<set name="destination" value="local" />
+<set name="destination" value="steam" if="steam" />
+<set name="destination" value="itch" if="itch" />
+
+<set name="destination" value="${destination}-testing" if="testing" />
+<set name="destination" value="${destination}-demo" if="demo" />
+
+<set name="destination" value="${destination}/final" if="final" />
+
+<set name="BUILD_DIR" value="export/${destination}" />
+
+	
 	<source path="source" />
 	<assets path="assets" />
 

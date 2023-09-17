@@ -5,16 +5,26 @@ import flixel.FlxG;
 import axollib.GraphicsCache;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
+import objects.Dog;
+import objects.Skunk;
+import objects.IAnimal;
 
 class Game
 {
-
 	public static var State:PlayState;
+	public static var Backgrounds:Map<Theme, String> = [
+		WOODS => "assets/images/forest_back.png",
+		SUBURBS => "assets/images/suburbs_back.png",
+		CITY => "assets/images/backgrounds/city.png"
+	];
 
-	public static var Backgrounds:Map<String, String>;
+	public static var LevelLengths:Map<Theme, Float> = [WOODS => 12000, SUBURBS => 15000, CITY => 20000];
 
-	public static var Decorations:Map<String, Array<String>>;
-	public static var DecorationsRarity:Map<String, Array<Float>>;
+	public static var Animals:Map<Theme, Array<Class<IAnimal>>> = [WOODS => [Skunk], SUBURBS => [Dog, Skunk]];
+	public static var AnimalsRarity:Map<Theme, Array<Float>> = [WOODS => [1], SUBURBS => [0.75, 0.25]];
+
+	public static var Decorations:Map<Theme, Array<String>>;
+	public static var DecorationsRarity:Map<Theme, Array<Float>>;
 
 	public static var Obstacles:Map<RoadStyle, Array<String>>;
 	public static var ObstaclesRarity:Map<RoadStyle, Array<Float>>;
@@ -26,7 +36,16 @@ class Game
 
 	public static var gameInitialized:Bool = false;
 
-	public static var OUR_BLACK:FlxColor = 0xff344a58;
+	public static var OUR_BLACK:FlxColor = 0xff3a3a50;
+
+	public static var CurrentLevel:Int = -1;
+	public static var LevelThemes:Map<Int, Theme> = [0 => WOODS, 1 => SUBURBS, 2 => CITY];
+
+	public static var Scores:Map<Int, Int> = [0 => 0, 1 => 0, 2 => 0];
+
+	public static var StartingDifficulty:Map<Theme, Float> = [WOODS => 3, SUBURBS => 5, CITY => 8];
+	public static var DifficultyRate:Map<Theme, Float> = [WOODS => 0.05, SUBURBS => 0.1, CITY => 0.2];
+
 
 	public static function initializeGame():Void
 	{
@@ -35,25 +54,19 @@ class Game
 
 		Actions.init();
 
-
-		buildBackgrounds();
-
 		buildDecorations();
 
 		buildObstacles();
+		gameInitialized = true;
 	}
 
-
-	private static function buildBackgrounds():Void
+	public static function resetScores():Void
 	{
-		Backgrounds = [];
-
-		Backgrounds[WOODS] = "assets/images/forest_back.png";
-		Backgrounds[SUBURBS] = "assets/images/suburbs_back.png";
-		// Backgrounds[Theme.CITY] = "assets/images/backgrounds/city.png";
+		Scores = [0 => 0, 1 => 0, 2 => 0];
 	}
 
-	private static function buildObstacles():Void {
+	private static function buildObstacles():Void
+	{
 		Obstacles = [];
 		ObstaclesRarity = [];
 
@@ -84,7 +97,6 @@ class Game
 
 		Obstacles.set(STREET, suburbs);
 		ObstaclesRarity.set(STREET, suburbsRarity);
-
 
 		Vehicles = [];
 		VehiclesRarity = [];
@@ -121,7 +133,6 @@ class Game
 
 		StreetSideObjs = sideObjs;
 		StreetSideObjsRarity = sideObjsRarity;
-
 	}
 
 	private static function buildDecorations():Void

@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "suburbs.tmx",
+    "activeFile": "",
     "expandedProjectPaths": [
     ],
     "fileStates": {
@@ -38,7 +38,7 @@
         },
         "street_ground.tsx": {
             "scaleInDock": 8,
-            "scaleInEditor": 1
+            "scaleInEditor": 16
         },
         "suburbs.tmx": {
             "scale": 3,
@@ -67,14 +67,14 @@
     ],
     "project": "fresno.tiled-project",
     "recentFiles": [
-        "11_Camping_16x16.tsx",
-        "17_Garden_16x16.tsx",
-        "10_Vehicles_16x16.tsx",
-        "street_ground.tsx",
-        "7_Villas_16x16.tsx",
-        "2_City_Terrains_16x16.tsx",
-        "1_Terrains_and_Fences_16x16.tsx",
         "suburbs.tmx",
+        "1_Terrains_and_Fences_16x16.tsx",
+        "2_City_Terrains_16x16.tsx",
+        "7_Villas_16x16.tsx",
+        "street_ground.tsx",
+        "10_Vehicles_16x16.tsx",
+        "17_Garden_16x16.tsx",
+        "11_Camping_16x16.tsx",
         "forest_ground.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",

@@ -17,7 +17,6 @@ class Obstacle extends FlxSprite
 
 	public function spawn(X:Float, Y:Float, LaneNo:Int, Style:RoadStyle):Void
 	{
-
 		if ((LaneNo == 0))
 		{
 			if (FlxG.random.bool(Style == STREET ? 30 : 0))
@@ -29,9 +28,9 @@ class Obstacle extends FlxSprite
 			}
 			else
 			{
-			frames = GraphicsCache.loadAtlasFrames("assets/images/vehicles.png", "assets/images/vehicles.xml", false, "vehicles");
+				frames = GraphicsCache.loadAtlasFrames("assets/images/vehicles.png", "assets/images/vehicles.xml", false, "vehicles");
 
-			animation.frameName = Game.Vehicles[FlxG.random.weightedPick(Game.VehiclesRarity)];
+				animation.frameName = Game.Vehicles[FlxG.random.weightedPick(Game.VehiclesRarity)];
 			}
 		}
 		else
@@ -47,13 +46,11 @@ class Obstacle extends FlxSprite
 					frames = GraphicsCache.loadAtlasFrames("assets/images/street_objects.png", "assets/images/street_objects.xml", false, "street_objects");
 
 					animation.frameName = Game.Obstacles.get(Style)[FlxG.random.weightedPick(Game.ObstaclesRarity.get(Style))];
-
 			}
 		}
 
-
 		updateHitbox();
-        
+
 		var sizes:Array<String> = animation.frameName.split("_");
 
 		ZHeight = Std.parseFloat(sizes[3]);
@@ -65,6 +62,12 @@ class Obstacle extends FlxSprite
 		var newY:Float = Y - (height + Math.max(0, 16 - height));
 
 		reset(newX, newY);
-		
+	}
+
+	override public function update(elapsed:Float):Void
+	{
+		super.update(elapsed);
+		if (x + width < FlxG.camera.scroll.x - 16)
+			kill();
 	}
 }
