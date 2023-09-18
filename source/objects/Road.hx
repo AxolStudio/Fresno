@@ -7,7 +7,7 @@ class Road extends FlxTilemap
 {
 	public var templates:Map<RoadStyle, Array<String>> = [
 		GROUND => ["A", "B", "B", "B", "B", "B", "C"],
-		STREET => ["E", "A", "B", "B", "C", "B", "D"]
+		STREET => ["E", "A", "B", "C", "B", "D", "E"]
 	];
 
 	public var replacements:Map<RoadStyle, Map<String, Array<Int>>> = [

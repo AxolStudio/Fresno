@@ -31,8 +31,8 @@ class Skunk extends Obstacle implements IAnimal
 
 		width = 14;
 		offset.x = 10;
-		offset.y = 28;
-		height = 4;
+		offset.y = 24;
+		height = 8;
 		ZHeight = 10;
 
 		kill();

@@ -59,7 +59,7 @@ class Obstacle extends FlxSprite
 		width = Std.parseFloat(sizes[1]);
 
 		var newX:Float = X + 8 - Std.int(Math.min(8, width / 2));
-		var newY:Float = Y - (height + Math.max(0, 16 - height));
+		var newY:Float = Y - ((height + Math.max(0, 16 - height)/2));
 
 		reset(newX, newY);
 	}

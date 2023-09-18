@@ -78,24 +78,29 @@ class PlayState extends FlxState
 
 		Game.State = this;
 
+		#if debug
+		Game.CurrentLevel = 2;
+		#end
+
 		levelTheme = Game.LevelThemes.get(Game.CurrentLevel);
 
 		add(lyrBackground = new FlxTypedGroup<FlxSprite>());
 		if (levelTheme == WOODS)
 			add(lyrBackDeco = new FlxTypedGroup<Decoration>());
 		add(lyrStreet = new FlxTypedGroup<Road>());
-		add(lyrShadow = new FlxTypedGroup<Shadow>());
-		add(lyrStreetObjects = new FlxTypedGroup<Obstacle>());
-		add(lyrPowerups = new FlxTypedGroup<Powerup>());
-		add(lyrPlayer = new FlxTypedGroup<Player>());
 		vignette = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [
-			Game.OUR_BLACK, Game.OUR_BLACK, Game.OUR_BLACK, Game.OUR_BLACK, FlxColor.TRANSPARENT, FlxColor.TRANSPARENT, FlxColor.TRANSPARENT,
-			FlxColor.TRANSPARENT, FlxColor.TRANSPARENT, FlxColor.TRANSPARENT, Game.OUR_BLACK
+			0xff2d4275, 0xff2d4275, 0xff2d4275, 0xff2d4275, 0xff2d4275, FlxColor.TRANSPARENT, FlxColor.TRANSPARENT, FlxColor.TRANSPARENT,
+			FlxColor.TRANSPARENT, FlxColor.TRANSPARENT, 0xff2d4275
 		], 1, 90, true);
 		vignette.alpha = .95;
 		vignette.blend = BlendMode.MULTIPLY;
 		vignette.scrollFactor.set(0, 0);
 		add(vignette);
+		add(lyrShadow = new FlxTypedGroup<Shadow>());
+		add(lyrStreetObjects = new FlxTypedGroup<Obstacle>());
+		add(lyrPowerups = new FlxTypedGroup<Powerup>());
+		add(lyrPlayer = new FlxTypedGroup<Player>());
+		
 
 		createBackground();
 
@@ -275,7 +280,7 @@ class PlayState extends FlxState
 				FlxG.camera.fade(Game.OUR_BLACK, 1, false, () ->
 				{
 					Game.Scores.set(Game.CurrentLevel, player.score);
-					if (Game.CurrentLevel < 1)
+					if (Game.CurrentLevel < 2)
 					{
 						Game.CurrentLevel++;
 						FlxG.switchState(new PlayState());
@@ -283,10 +288,12 @@ class PlayState extends FlxState
 					else
 					{
 						// game win!?
+						FlxG.switchState(new TitleState());
 					}
 				});
 			}
 		}
+		lyrStreetObjects.sort(sortObjects, FlxSort.ASCENDING);
 	}
 
 	public function checkCollisions():Void
@@ -396,7 +403,7 @@ class PlayState extends FlxState
 			{
 				var obstacle = null;
 
-				if (FlxG.random.bool(20))
+				if (FlxG.random.bool(5))
 				{
 					var which:Class<Obstacle> = cast Game.Animals.get(levelTheme)[FlxG.random.weightedPick(Game.AnimalsRarity.get(levelTheme))];
 
@@ -425,14 +432,14 @@ class PlayState extends FlxState
 			}
 		}
 
-		lyrStreetObjects.sort(sortObjects, FlxSort.ASCENDING);
+
 	}
 
 	private function sortObjects(Direction:Int, A:Obstacle, B:Obstacle):Int
 	{
-		if (A.y + A.height > B.y + B.height)
+		if (A.y + A.ZHeight > B.y + B.ZHeight)
 			return 1;
-		else if (A.y + A.height < B.y + B.height)
+		else if (A.y + A.ZHeight < B.y + B.ZHeight)
 			return -1;
 		else
 			return 0;

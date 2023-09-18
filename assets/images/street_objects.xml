@@ -4,17 +4,17 @@
 	Created with ShoeBox
 	http://renderhjs.net/shoebox/
 	-->
-	<SubTexture name="obj2_16_8_5"	x="33"	y="47"	width="17"	height="16" frameX="-6" frameY="-0" frameWidth="32" frameHeight="16"/>
-	<SubTexture name="obj2_26_15_0"	x="0"	y="47"	width="32"	height="15" frameX="-0" frameY="-0" frameWidth="32" frameHeight="15"/>
-	<SubTexture name="obj2_40_15_0"	x="0"	y="16"	width="47"	height="15" frameX="-0" frameY="-0" frameWidth="47" frameHeight="15"/>
-	<SubTexture name="obj_10_8_14"	x="61"	y="17"	width="11"	height="14" frameX="-3" frameY="-1" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="obj_12_7_11"	x="48"	y="17"	width="12"	height="11" frameX="-2" frameY="-3" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="obj_12_9_9"	x="51"	y="47"	width="15"	height="18" frameX="-1" frameY="-0" frameWidth="16" frameHeight="18"/>
-	<SubTexture name="obj_14_7_8"	x="48"	y="66"	width="13"	height="8" frameX="-1" frameY="-7" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="obj_14_7_9"	x="33"	y="64"	width="14"	height="9" frameX="-1" frameY="-5" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="obj_16_16_5"	x="44"	y="32"	width="16"	height="14" frameX="-0" frameY="-1" frameWidth="16" frameHeight="16"/>
-	<SubTexture name="obj_16_8_5"	x="48"	y="0"	width="17"	height="16" frameX="-6" frameY="-0" frameWidth="32" frameHeight="16"/>
-	<SubTexture name="obj_26_15_0"	x="0"	y="63"	width="32"	height="15" frameX="-0" frameY="-0" frameWidth="32" frameHeight="15"/>
-	<SubTexture name="obj_40_15_0"	x="0"	y="0"	width="47"	height="15" frameX="-0" frameY="-0" frameWidth="47" frameHeight="15"/>
-	<SubTexture name="obj_43_12_14"	x="0"	y="32"	width="43"	height="14" frameX="-2" frameY="-1" frameWidth="48" frameHeight="16"/>
+	<SubTexture name="obj2_16_8_5"	x="33"	y="43"	width="17"	height="16" frameX="-6" frameY="-0" frameWidth="32" frameHeight="16"/>
+	<SubTexture name="obj2_26_13_0"	x="0"	y="43"	width="32"	height="13" frameX="-0" frameY="-0" frameWidth="32" frameHeight="13"/>
+	<SubTexture name="obj2_40_13_0"	x="0"	y="14"	width="47"	height="13" frameX="-0" frameY="-0" frameWidth="47" frameHeight="13"/>
+	<SubTexture name="obj_10_8_14"	x="61"	y="28"	width="11"	height="14" frameX="-3" frameY="-1" frameWidth="16" frameHeight="16"/>
+	<SubTexture name="obj_12_7_11"	x="51"	y="53"	width="12"	height="11" frameX="-2" frameY="-3" frameWidth="16" frameHeight="16"/>
+	<SubTexture name="obj_12_9_9"	x="48"	y="0"	width="15"	height="18" frameX="-1" frameY="-0" frameWidth="16" frameHeight="18"/>
+	<SubTexture name="obj_14_7_8"	x="48"	y="19"	width="13"	height="8" frameX="-1" frameY="-7" frameWidth="16" frameHeight="16"/>
+	<SubTexture name="obj_14_7_9"	x="51"	y="43"	width="14"	height="9" frameX="-1" frameY="-5" frameWidth="16" frameHeight="16"/>
+	<SubTexture name="obj_16_16_5"	x="44"	y="28"	width="16"	height="14" frameX="-0" frameY="-1" frameWidth="16" frameHeight="16"/>
+	<SubTexture name="obj_16_8_5"	x="33"	y="60"	width="17"	height="16" frameX="-6" frameY="-0" frameWidth="32" frameHeight="16"/>
+	<SubTexture name="obj_26_13_0"	x="0"	y="57"	width="32"	height="13" frameX="-0" frameY="-0" frameWidth="32" frameHeight="13"/>
+	<SubTexture name="obj_40_13_0"	x="0"	y="0"	width="47"	height="13" frameX="-0" frameY="-0" frameWidth="47" frameHeight="13"/>
+	<SubTexture name="obj_43_12_14"	x="0"	y="28"	width="43"	height="14" frameX="-2" frameY="-1" frameWidth="48" frameHeight="16"/>
 </TextureAtlas>

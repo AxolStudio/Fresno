@@ -1,5 +1,6 @@
 package globals;
 
+import objects.Rat;
 import states.PlayState;
 import flixel.FlxG;
 import axollib.GraphicsCache;
@@ -15,13 +16,13 @@ class Game
 	public static var Backgrounds:Map<Theme, String> = [
 		WOODS => "assets/images/forest_back.png",
 		SUBURBS => "assets/images/suburbs_back.png",
-		CITY => "assets/images/backgrounds/city.png"
+		CITY => "assets/images/city_back.png"
 	];
 
 	public static var LevelLengths:Map<Theme, Float> = [WOODS => 12000, SUBURBS => 15000, CITY => 20000];
 
-	public static var Animals:Map<Theme, Array<Class<IAnimal>>> = [WOODS => [Skunk], SUBURBS => [Dog, Skunk]];
-	public static var AnimalsRarity:Map<Theme, Array<Float>> = [WOODS => [1], SUBURBS => [0.75, 0.25]];
+	public static var Animals:Map<Theme, Array<Class<IAnimal>>> = [WOODS => [Skunk], SUBURBS => [Dog, Skunk], CITY => [Rat, Dog, Skunk]];
+	public static var AnimalsRarity:Map<Theme, Array<Float>> = [WOODS => [1], SUBURBS => [0.75, 0.25], CITY => [0.8, 0.1, 0.1]];
 
 	public static var Decorations:Map<Theme, Array<String>>;
 	public static var DecorationsRarity:Map<Theme, Array<Float>>;
@@ -43,8 +44,8 @@ class Game
 
 	public static var Scores:Map<Int, Int> = [0 => 0, 1 => 0, 2 => 0];
 
-	public static var StartingDifficulty:Map<Theme, Float> = [WOODS => 3, SUBURBS => 5, CITY => 8];
-	public static var DifficultyRate:Map<Theme, Float> = [WOODS => 0.05, SUBURBS => 0.1, CITY => 0.2];
+	public static var StartingDifficulty:Map<Theme, Float> = [WOODS => 2, SUBURBS => 2.25, CITY => 2.5];
+	public static var DifficultyRate:Map<Theme, Float> = [WOODS => 0.05, SUBURBS => 0.06, CITY => 0.07];
 
 
 	public static function initializeGame():Void
@@ -80,8 +81,9 @@ class Game
 		for (f in 0...s.animation.numFrames)
 		{
 			s.animation.frameIndex = f;
+			s.updateHitbox();
 			woods.push(s.animation.frameName);
-			woodRarity.push(1 - (s.width / 16 / 100));
+			woodRarity.push(1 - (s.width / 16 / 10));
 		}
 
 		Obstacles.set(GROUND, woods);
@@ -91,12 +93,15 @@ class Game
 		for (f in 0...s.animation.numFrames)
 		{
 			s.animation.frameIndex = f;
+			s.updateHitbox();
 			suburbs.push(s.animation.frameName);
-			suburbsRarity.push(1 - (s.width / 16 / 100));
+			suburbsRarity.push(1 - (s.width / 16 / 10));
 		}
 
 		Obstacles.set(STREET, suburbs);
 		ObstaclesRarity.set(STREET, suburbsRarity);
+
+		trace(ObstaclesRarity);
 
 		Vehicles = [];
 		VehiclesRarity = [];
@@ -109,8 +114,9 @@ class Game
 		for (f in 0...s.animation.numFrames)
 		{
 			s.animation.frameIndex = f;
+			s.updateHitbox();
 			vehicles.push(s.animation.frameName);
-			vehicleRarity.push(1 - (s.width / 16 / 100));
+			vehicleRarity.push(1 - (s.width / 16 / 10));
 		}
 
 		Vehicles = vehicles;
