@@ -1,5 +1,9 @@
 package states;
 
+import flixel.FlxState;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.math.FlxMath;
 import globals.Actions;
 import flixel.text.FlxText;
 import haxe.macro.Tools;
@@ -12,22 +16,23 @@ import ui.Frame;
 import flixel.FlxG;
 import flixel.FlxSubState;
 
-class HowToPlayState extends FlxSubState
+class HowToPlayState extends FlxState
 {
+
 	public var ready:Bool = false;
 
-	public function new(CB:Void->Void)
+	public function new()
 	{
 		super();
-		closeCallback = CB;
 	}
 
 	override public function create():Void
 	{
 		bgColor = FlxColor.TRANSPARENT;
+		FlxG.autoPause = false;
 
-		var frame:Frame = new Frame(FlxG.width - 8, FlxG.height - 8);
-		frame.screenCenter();
+		var frame:FlxSprite = new FlxSprite("assets/images/how-to-back.png");
+		
 		add(frame);
 
 		var text:NormalText = new NormalText("How to Play");
@@ -36,33 +41,37 @@ class HowToPlayState extends FlxSubState
 		text.screenCenter(FlxAxes.X);
 		add(text);
 
-		var inner:InnerFrame = new InnerFrame(frame.width - 12, frame.height - (text.height - 2) - 12 - 32);
-		inner.x = frame.x + 6;
-		inner.y = text.y + text.height - 2;
-		add(inner);
+		// inner = new InnerFrame(frame.width - 12, frame.height - (text.height - 2) - 12 - 32);
+		// inner.x = frame.x + 6;
+		// inner.y = text.y + text.height - 2;
+		// add(inner);
 
 		var controller:FlxSprite = new FlxSprite("assets/images/controller.png");
-		controller.x = inner.x + (inner.width / 4) - (controller.width / 2);
-		controller.y = inner.y + (inner.height / 2) - (controller.height / 2);
+		controller.x = frame.x + 6 + ((frame.width - 12) / 4) - (controller.width / 2);
+		controller.y = text.y + text.height - 2 + (126 / 2) - (controller.height / 2);
 		add(controller);
 
 		var keyboard:FlxSprite = new FlxSprite("assets/images/kb_controls.png");
-		keyboard.x = inner.x + (inner.width / 4) * 3 - (keyboard.width / 2);
-		keyboard.y = inner.y + (inner.height / 2) - (keyboard.height / 2);
+		keyboard.x = frame.x + 6 + ((frame.width - 12) / 4) * 3 - (keyboard.width / 2);
+		keyboard.y = text.y + text.height - 2 + (126 / 2) - (keyboard.height / 2);
 		add(keyboard);
 
 		var instructions:NormalText = new NormalText("Avoid obstacles to make it home to Fresno before sunrise!\nJump over obstacles to gain Stars. 5 x Stars = reward!");
 		instructions.color = Game.OUR_BLACK;
 		instructions.autoSize = false;
-		instructions.fieldWidth = Std.int(inner.width) - 16;
+		instructions.fieldWidth = Std.int(frame.width - 12) - 16;
 		instructions.multiLine = true;
 		instructions.wordWrap = true;
 		instructions.alignment = FlxTextAlign.CENTER;
-		instructions.x = inner.x + 3;
-		instructions.y = inner.y + inner.height + 2;
+		instructions.x = frame.x + 9;
+		instructions.y = text.y + text.height - 2 + 126 + 2;
 		add(instructions);
 
-		ready = true;
+		FlxG.camera.fade(Game.OUR_BLACK, .5, true, () ->
+		{
+			ready = true;
+		});
+		
 
 		super.create();
 	}
@@ -77,7 +86,11 @@ class HowToPlayState extends FlxSubState
 		if (Actions.any.triggered)
 		{
 			ready = false;
-			close();
+			FlxG.camera.fade(Game.OUR_BLACK, .5, false, () ->
+			{
+				FlxG.switchState(new TitleState());
+			});
 		}
 	}
+
 }

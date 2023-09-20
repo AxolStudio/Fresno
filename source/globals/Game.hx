@@ -1,5 +1,7 @@
 package globals;
 
+import axollib.AxolAPI;
+import openfl.media.Sound;
 import flixel.graphics.frames.FlxBitmapFont;
 import objects.Rat;
 import states.PlayState;
@@ -10,9 +12,16 @@ import flixel.util.FlxColor;
 import objects.Dog;
 import objects.Skunk;
 import objects.IAnimal;
+import openfl.utils.ByteArray;
+
+@:file("keys/axolapi") class AxolKey extends ByteArrayData {}
 
 class Game
 {
+	static private var axolBytes = new AxolKey();
+
+	static private var AXOL_KEY:String = StringTools.replace(axolBytes.readUTFBytes(axolBytes.length), "\n", "");
+
 	public static var State:PlayState;
 	public static var Backgrounds:Map<Theme, String> = [
 		WOODS => "assets/images/forest_back.png",
@@ -20,7 +29,7 @@ class Game
 		CITY => "assets/images/city_back.png"
 	];
 
-	public static var LevelLengths:Map<Theme, Float> = [WOODS => 15000, SUBURBS => 20000, CITY => 30000];
+	public static var LevelLengths:Map<Theme, Float> = [WOODS => 13500, SUBURBS => 18000, CITY => 27000];
 
 	public static var Animals:Map<Theme, Array<Class<IAnimal>>> = [WOODS => [Skunk], SUBURBS => [Dog, Skunk], CITY => [Rat, Dog, Skunk]];
 	public static var AnimalsRarity:Map<Theme, Array<Float>> = [WOODS => [1], SUBURBS => [0.75, 0.25], CITY => [0.8, 0.1, 0.1]];
@@ -50,15 +59,19 @@ class Game
 
 	public static var NormalFont:FlxBitmapFont;
 
+	public static var LevelMusic:Map<Int, String> = [0 => "forest", 1 => "suburbs", 2 => "city"];
 
 	public static function initializeGame():Void
 	{
 		if (gameInitialized)
 			return;
 
+		AxolAPI.initialize(AXOL_KEY);
+
 		NormalFont = FlxBitmapFont.fromAngelCode("assets/images/skinny_text.png", "assets/images/skinny_text.xml");
 
 		Actions.init();
+		Sound.preloadSounds();
 
 		buildDecorations();
 

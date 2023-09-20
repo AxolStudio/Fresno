@@ -1,5 +1,7 @@
 package states;
 
+import flixel.FlxBasic;
+import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxMath;
 import ui.NormalText;
 import ui.Frame;
@@ -11,6 +13,7 @@ import flixel.graphics.frames.FlxBitmapFont;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import globals.Game;
+import globals.Sound;
 import flixel.text.FlxBitmapText;
 import flixel.FlxG;
 import flixel.util.FlxAxes;
@@ -26,8 +29,22 @@ class TitleState extends FlxState
 
 	private var pressAnyKey:FlxBitmapText;
 
+	override public function destroy():Void
+	{
+		moon = FlxDestroyUtil.destroy(moon);
+		title = FlxDestroyUtil.destroy(title);
+		pressAnyKey = FlxDestroyUtil.destroy(pressAnyKey);
+
+		super.destroy();
+	}
+
 	override public function create():Void
 	{
+		FlxG.autoPause = false;
+
+		
+
+
 		add(new FlxSprite(0, 0, "assets/images/title_back.png"));
 
 		add(moon = new FlxSprite(0, 0, "assets/images/title_moon.png"));
@@ -51,6 +68,12 @@ class TitleState extends FlxState
 		pressAnyKey.y = FlxG.height;
 		pressAnyKey.alpha = 0;
 
+		var copyText:NormalText = new NormalText("© 2023 Axol Studio, LLC");
+		copyText.x = 4;
+		copyText.y = FlxG.height - copyText.height - 4;
+		copyText.alpha = 0;
+		add(copyText);
+
 		FlxTween.tween(moon, {y: 27}, 1.2, {ease: FlxEase.sineOut});
 		FlxTween.tween(title, {y: 33, alpha: 1}, 1.2, {
 			ease: FlxEase.sineOut,
@@ -59,6 +82,7 @@ class TitleState extends FlxState
 			{
 				FlxG.camera.flash(0xff63b556, .5, () ->
 				{
+					FlxTween.tween(copyText, {alpha: 1}, .33);
 					FlxTween.tween(pressAnyKey, {y: FlxG.height - pressAnyKey.height - 20, alpha: 1}, .5, {
 						ease: FlxEase.sineOut,
 						onComplete: (_) ->
@@ -70,6 +94,8 @@ class TitleState extends FlxState
 				});
 			}
 		});
+
+		Sound.playMusic("title");
 
 		FlxG.camera.fade(Game.OUR_BLACK, 1, true);
 
@@ -121,6 +147,15 @@ class Menu extends FlxSubState
 
 	public var ready:Bool = false;
 
+	override public function destroy():Void
+	{
+		frame = FlxDestroyUtil.destroy(frame);
+		options = FlxDestroyUtil.destroyArray(options);
+		selector = FlxDestroyUtil.destroy(selector);
+
+		super.destroy();
+	}
+
 	override public function create():Void
 	{
 		var widest:Float = 0;
@@ -133,11 +168,13 @@ class Menu extends FlxSubState
 		opt = new NormalText("How to Play");
 		options.push(opt);
 
-		opt = new NormalText("Settings");
-		options.push(opt);
-
 		opt = new NormalText("Credits");
 		options.push(opt);
+
+		#if desktop
+		opt = new NormalText("Quit");
+		options.push(opt);
+		#end
 
 		selector = new FlxSprite("assets/images/selector.png");
 
@@ -150,7 +187,6 @@ class Menu extends FlxSubState
 		frame = new Frame(widest + (selector.width * 2) + 32, options.length * (options[0].height + 2) + 8);
 		frame.x = FlxG.width - frame.width - 8;
 		frame.y = FlxG.height - frame.height - 8;
-
 		add(frame);
 
 		for (i in 0...options.length)
@@ -210,26 +246,26 @@ class Menu extends FlxSubState
 		else if (Actions.any.triggered)
 		{
 			ready = false;
-
+			FlxG.camera.fade(Game.OUR_BLACK, .5, false, () ->
+			{
 			switch (selected)
 			{
 				case 0:
-					FlxG.camera.fade(Game.OUR_BLACK, .5, false, () ->
-					{
+						Sound.fadeOutMusic(.5);
 						Game.CurrentLevel = 0;
 						FlxG.switchState(new PlayState());
-					});
+
 				case 1:
-					openSubState(new HowToPlayState(returnFromSubState));
+						FlxG.switchState(new HowToPlayState());
 				case 2:
-				// openSubState(new Settings());
-				// break;
-				case 3:
-					FlxG.camera.fade(Game.OUR_BLACK, .5, false, () ->
-					{
+
 						FlxG.switchState(new CreditsState());
-					});
-			}
+					#if desktop
+					case 3:
+						openfl.system.System.exit(0);
+					#end
+				}
+			});
 
 		}
 	}

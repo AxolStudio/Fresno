@@ -18,6 +18,8 @@ class CreditsState extends FlxState
 
 	public override function create():Void
 	{
+		FlxG.autoPause = false;
+		
 		bgColor = Game.OUR_BLACK;
 
 		var t:NormalText;

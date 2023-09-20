@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] Build level
+- [x] Build level
   - [x] set theme
   - [x] build sky
   - [x] build background
@@ -18,8 +18,10 @@
 - [x] create death state
 - [ ] create win state
 - [x] create title
-- [ ] create pause menu
-- [ ] create settings menu
-- [ ] create credits menu
+- [x] create pause menu
+- [x] create credits menu
+- [ ] Sound Effects
+- [x] Music
+- [ ] Add animation of star flying to the hud when earned
 
 <https://axolstudio.itch.io/long-road-to-fresno?password=nightcrawlers>

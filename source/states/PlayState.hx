@@ -1,5 +1,11 @@
 package states;
 
+import axollib.AxolAPI;
+import flixel.util.FlxDestroyUtil;
+import flixel.graphics.frames.FlxBitmapFont;
+import flixel.text.FlxBitmapText;
+import ui.Frame;
+import flixel.FlxSubState;
 import flixel.input.actions.FlxActionInput;
 import objects.IAnimal;
 import objects.Skunk;
@@ -24,6 +30,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxGradient;
 import globals.Game;
+import globals.Sound;
 import objects.Player;
 
 class PlayState extends FlxState
@@ -71,10 +78,30 @@ class PlayState extends FlxState
 
 	public var levelEndingX:Float = -1;
 
+	public var ready:Bool = false;
+
+	override public function destroy():Void
+	{
+		lyrBackground = FlxDestroyUtil.destroy(lyrBackground);
+		lyrBackDeco = FlxDestroyUtil.destroy(lyrBackDeco);
+		lyrStreet = FlxDestroyUtil.destroy(lyrStreet);
+		lyrStreetObjects = FlxDestroyUtil.destroy(lyrStreetObjects);
+		lyrPowerups = FlxDestroyUtil.destroy(lyrPowerups);
+		lyrShadow = FlxDestroyUtil.destroy(lyrShadow);
+		lyrPlayer = FlxDestroyUtil.destroy(lyrPlayer);
+		vignette = FlxDestroyUtil.destroy(vignette);
+		hud = FlxDestroyUtil.destroy(hud);
+
+		super.destroy();
+	}
+
 
 	override public function create()
 	{
 
+		FlxG.autoPause = true;
+
+		
 
 		Game.State = this;
 
@@ -121,15 +148,41 @@ class PlayState extends FlxState
 
 		difficulty = Game.StartingDifficulty.get(levelTheme);
 
+		Sound.playMusic(Game.LevelMusic[Game.CurrentLevel]);
+
 		FlxG.camera.fade(Game.OUR_BLACK, 1, true, () ->
 		{
+			ready = true;
 			movementAllowed = true;
 			gameStarted = true;
 			player.animation.play("walk");
 			// player.giveSkateboard();
 		});
 
+		AxolAPI.sendEvent('Started Level ${Game.CurrentLevel + 1}');
+
 		super.create();
+	}
+
+	public function pause():Void
+	{
+		if (!ready)
+			return;
+		ready = false;
+		AxolAPI.sendEvent('Paused');
+		openSubState(new PauseSubState(returnFromPause));
+	}
+
+	private function returnFromPause():Void
+	{
+		AxolAPI.sendEvent('Resumed');
+		ready = true;
+	}
+
+	override public function onFocusLost():Void
+	{
+		if (ready)
+			pause();
 	}
 
 	private function createStartingObstacles():Void
@@ -169,6 +222,7 @@ class PlayState extends FlxState
 		FlxG.camera.fade(Game.OUR_BLACK, 1, false, () ->
 		{
 			// FlxG.switchState(new PlayState());
+			AxolAPI.sendEvent('Died on level ${Game.CurrentLevel + 1}');
 			FlxG.resetState();
 		});
 	}
@@ -253,8 +307,13 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 
-		if (!gameStarted || !player.alive)
+		if (!ready || !gameStarted || !player.alive)
 			return;
+		if (Actions.pause.triggered)
+		{
+			pause();
+			return;
+		}
 
 		levelSpeed += levelAcc * elapsed;
 		levelSpeed = Math.min(levelSpeed, levelSpeedMax);
@@ -285,11 +344,13 @@ class PlayState extends FlxState
 					if (Game.CurrentLevel < 2)
 					{
 						Game.CurrentLevel++;
+						AxolAPI.sendEvent('Cleared Level ${Game.CurrentLevel + 1}');
 						FlxG.switchState(new PlayState());
 					}
 					else
 					{
 						// game win!?
+						AxolAPI.sendEvent('Game Won!');
 						FlxG.switchState(new TitleState());
 					}
 				});
@@ -445,5 +506,64 @@ class PlayState extends FlxState
 			return -1;
 		else
 			return 0;
+	}
+}
+
+class PauseSubState extends FlxSubState
+{
+	public var ready:Bool = false;
+
+	var cb:Void->Void;
+
+	public function new(CB:Void->Void):Void
+	{
+		super();
+		cb = CB;
+	}
+
+	override public function create():Void
+	{
+		bgColor = 0x663a3a50;
+
+		closeCallback = cb;
+
+		var pauseText:FlxBitmapText = new FlxBitmapText(FlxBitmapFont.fromAngelCode("assets/images/fat_text.png", "assets/images/fat_text.xml"));
+		pauseText.text = "* P A U S E D *";
+		pauseText.screenCenter();
+		pauseText.scrollFactor.set();
+
+		var frame:Frame = new Frame(pauseText.width + 32, pauseText.height + 32);
+		frame.screenCenter();
+		frame.scrollFactor.set();
+
+		add(frame);
+		add(pauseText);
+
+		FlxG.camera.flash(FlxColor.WHITE, .2, () ->
+		{
+			ready = true;
+		});
+		super.create();
+	}
+
+	override public function update(elapsed:Float):Void
+	{
+		super.update(elapsed);
+		if (!ready)
+			return;
+		if (Actions.pause.triggered)
+		{
+			ready = false;
+			FlxG.camera.flash(FlxColor.WHITE, .2, () ->
+			{
+				close();
+			});
+		}
+	}
+
+	override public function destroy():Void
+	{
+		cb = null;
+		super.destroy();
 	}
 }
