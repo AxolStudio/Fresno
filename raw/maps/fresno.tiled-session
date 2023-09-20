@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "suburbs.tmx",
     "expandedProjectPaths": [
     ],
     "fileStates": {
@@ -27,9 +27,29 @@
             "scaleInDock": 3,
             "scaleInEditor": 1
         },
+        "3_City_Props_16x16.tsx": {
+            "scaleInDock": 4,
+            "scaleInEditor": 1
+        },
+        "4_Generic_Buildings_16x16.tsx": {
+            "scaleInDock": 4,
+            "scaleInEditor": 1
+        },
+        "5_Floor_Modular_Buildings_16x16.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 3
+        },
+        "6_Garage_Sales_16x16.tsx": {
+            "scaleInDock": 3,
+            "scaleInEditor": 3
+        },
         "7_Villas_16x16.tsx": {
             "scaleInDock": 4,
             "scaleInEditor": 1
+        },
+        "9_Shopping_Center_and_Markets_16x16.tsx": {
+            "scaleInDock": 3,
+            "scaleInEditor": 3
         },
         "forest_ground.tsx": {
             "dynamicWrapping": false,
@@ -44,8 +64,8 @@
             "scale": 3,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 248.16666666666663,
-                "y": -57.833333333333314
+                "x": 107,
+                "y": -26.5
             }
         }
     },
@@ -63,19 +83,27 @@
         "street_ground.tsx",
         "10_Vehicles_16x16.tsx",
         "17_Garden_16x16.tsx",
-        "11_Camping_16x16.tsx"
+        "11_Camping_16x16.tsx",
+        "3_City_Props_16x16.tsx",
+        "6_Garage_Sales_16x16.tsx",
+        "4_Generic_Buildings_16x16.tsx",
+        "5_Floor_Modular_Buildings_16x16.tsx",
+        "9_Shopping_Center_and_Markets_16x16.tsx"
     ],
     "project": "fresno.tiled-project",
     "recentFiles": [
-        "suburbs.tmx",
-        "1_Terrains_and_Fences_16x16.tsx",
-        "2_City_Terrains_16x16.tsx",
-        "7_Villas_16x16.tsx",
-        "street_ground.tsx",
-        "10_Vehicles_16x16.tsx",
-        "17_Garden_16x16.tsx",
+        "9_Shopping_Center_and_Markets_16x16.tsx",
+        "5_Floor_Modular_Buildings_16x16.tsx",
+        "4_Generic_Buildings_16x16.tsx",
+        "6_Garage_Sales_16x16.tsx",
+        "3_City_Props_16x16.tsx",
         "11_Camping_16x16.tsx",
-        "forest_ground.tsx"
+        "17_Garden_16x16.tsx",
+        "10_Vehicles_16x16.tsx",
+        "street_ground.tsx",
+        "7_Villas_16x16.tsx",
+        "2_City_Terrains_16x16.tsx",
+        "1_Terrains_and_Fences_16x16.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

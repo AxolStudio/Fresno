@@ -1,5 +1,7 @@
 package objects;
 
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.FlxSprite;
 
 class Powerup extends FlxSprite
@@ -20,6 +22,9 @@ class Powerup extends FlxSprite
 		reset(X, Y);
 		type = Type;
 		animation.frameIndex = type == HEALTH ? 0 : 1;
+		velocity.x = 20;
+		offset.y = 8;
+		FlxTween.tween(offset, {y: 4}, 1, {type: FlxTweenType.PINGPONG, ease: FlxEase.quadInOut});
 	}
 }
 

@@ -79,7 +79,7 @@ class PlayState extends FlxState
 		Game.State = this;
 
 		#if debug
-		Game.CurrentLevel = 2;
+		// Game.CurrentLevel = 2;
 		#end
 
 		levelTheme = Game.LevelThemes.get(Game.CurrentLevel);
@@ -180,15 +180,17 @@ class PlayState extends FlxState
 		{
 			powerup = new Powerup();
 		}
-		var pY:Float = FlxG.camera.scroll.x + (FlxG.width / 2);
-		var pX:Float = zoneTop + (FlxG.random.int(1, 4) * 16);
-		if (FlxG.random.bool(1 - (player.health / 5)))
+		var pX:Float = FlxG.camera.scroll.x + FlxG.width;
+		var pY:Float = zoneTop + (FlxG.random.int(1, 4) * 16);
+		trace(player.health, (1 - ((player.health - 1) / 4)) * 100);
+
+		if (FlxG.random.bool((1 - ((player.health - 1) / 4)) * 100))
 		{
-			powerup.spawn(pY, pX, HEALTH);
+			powerup.spawn(pX, pY, HEALTH);
 		}
 		else
 		{
-			powerup.spawn(pY, pX, SKATE);
+			powerup.spawn(pX, pY, SKATE);
 		}
 		lyrPowerups.add(powerup);
 		addShadow(powerup);
@@ -403,7 +405,7 @@ class PlayState extends FlxState
 			{
 				var obstacle = null;
 
-				if (FlxG.random.bool(5))
+				if (FlxG.random.bool(10))
 				{
 					var which:Class<Obstacle> = cast Game.Animals.get(levelTheme)[FlxG.random.weightedPick(Game.AnimalsRarity.get(levelTheme))];
 

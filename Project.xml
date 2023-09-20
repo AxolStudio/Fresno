@@ -16,14 +16,17 @@
 	<!-- ____________________________ Window Settings ___________________________ -->
 
 	<!--These window settings apply to all targets-->
-<window width="640" height="360" fps="60" background="#000000" hardware="true" vsync="false" />
+<window width="320" height="180" fps="60" background="#000000" hardware="true" vsync="false" />
+
 
 
 	<!--HTML5-specific-->
 	<window if="html5" resizable="false" />
 
 	<!--Desktop-specific-->
-	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" />
+<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" />
+
+
 
 	<!--Mobile-specific-->
 	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" />
@@ -48,6 +51,8 @@
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />
+<haxelib name="flixel-addons" />
+
 	<include path="axollib/include.xml" />
 
 

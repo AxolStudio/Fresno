@@ -1,5 +1,6 @@
 package globals;
 
+import flixel.graphics.frames.FlxBitmapFont;
 import objects.Rat;
 import states.PlayState;
 import flixel.FlxG;
@@ -19,7 +20,7 @@ class Game
 		CITY => "assets/images/city_back.png"
 	];
 
-	public static var LevelLengths:Map<Theme, Float> = [WOODS => 12000, SUBURBS => 15000, CITY => 20000];
+	public static var LevelLengths:Map<Theme, Float> = [WOODS => 15000, SUBURBS => 20000, CITY => 30000];
 
 	public static var Animals:Map<Theme, Array<Class<IAnimal>>> = [WOODS => [Skunk], SUBURBS => [Dog, Skunk], CITY => [Rat, Dog, Skunk]];
 	public static var AnimalsRarity:Map<Theme, Array<Float>> = [WOODS => [1], SUBURBS => [0.75, 0.25], CITY => [0.8, 0.1, 0.1]];
@@ -45,13 +46,17 @@ class Game
 	public static var Scores:Map<Int, Int> = [0 => 0, 1 => 0, 2 => 0];
 
 	public static var StartingDifficulty:Map<Theme, Float> = [WOODS => 2, SUBURBS => 2.25, CITY => 2.5];
-	public static var DifficultyRate:Map<Theme, Float> = [WOODS => 0.05, SUBURBS => 0.06, CITY => 0.07];
+	public static var DifficultyRate:Map<Theme, Float> = [WOODS => 0.025, SUBURBS => 0.03, CITY => 0.035];
+
+	public static var NormalFont:FlxBitmapFont;
 
 
 	public static function initializeGame():Void
 	{
 		if (gameInitialized)
 			return;
+
+		NormalFont = FlxBitmapFont.fromAngelCode("assets/images/skinny_text.png", "assets/images/skinny_text.xml");
 
 		Actions.init();
 

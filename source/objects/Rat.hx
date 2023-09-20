@@ -15,7 +15,7 @@ class Rat extends Obstacle implements IAnimal
 		loadGraphic("assets/images/rat.png", true, 32, 32, false, "rat");
 
 		
-		animation.add("run", [5, 6, 7, 8, 9], 30, true, true);
+		animation.add("run", [5, 6, 7, 8, 9], 16, true, true);
 
 		updateHitbox();
 
@@ -41,7 +41,7 @@ class Rat extends Obstacle implements IAnimal
 	{
 		super.update(elapsed);
 
-		velocity.x = -50;
+		velocity.x = -80;
 
 		if (x + width < FlxG.camera.scroll.x - 16)
 		{

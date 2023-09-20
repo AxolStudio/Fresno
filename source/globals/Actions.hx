@@ -10,7 +10,6 @@ class Actions
 {
 	public static var actions:FlxActionManager;
 
-	public static var menuIndex:Int = -1;
 	public static var gameIndex:Int = -1;
 
 	public static var up:FlxActionDigital;
@@ -50,19 +49,11 @@ class Actions
 
 		Actions.leftStick = new FlxActionAnalog();
 
-		var menuSet:FlxActionSet = new FlxActionSet("MenuControls", [
-			Actions.upUI,
-			Actions.downUI,
-			Actions.leftUI,
-			Actions.rightUI,
-			Actions.pressUI,
-			Actions.pressUIPress,
-			Actions.any
+
+		var gameSet:FlxActionSet = new FlxActionSet("GameControls", [
+			Actions.up, Actions.down, Actions.jump, Actions.pause, Actions.upUI, Actions.downUI, Actions.leftUI, Actions.rightUI, Actions.pressUI,
+			Actions.pressUIPress, Actions.any
 		], [Actions.leftStick]);
-
-		menuIndex = Actions.actions.addSet(menuSet);
-
-		var gameSet:FlxActionSet = new FlxActionSet("GameControls", [Actions.up, Actions.down, Actions.jump, Actions.pause, Actions.any], [Actions.leftStick]);
 
 		gameIndex = Actions.actions.addSet(gameSet);
 
