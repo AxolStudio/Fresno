@@ -42,9 +42,6 @@ class TitleState extends FlxState
 	{
 		FlxG.autoPause = false;
 
-		
-
-
 		add(new FlxSprite(0, 0, "assets/images/title_back.png"));
 
 		add(moon = new FlxSprite(0, 0, "assets/images/title_moon.png"));
@@ -248,25 +245,30 @@ class Menu extends FlxSubState
 			ready = false;
 			FlxG.camera.fade(Game.OUR_BLACK, .5, false, () ->
 			{
-			switch (selected)
-			{
-				case 0:
+				switch (selected)
+				{
+					case 0:
 						Sound.fadeOutMusic(.5);
 						Game.CurrentLevel = 0;
 						FlxG.switchState(new PlayState());
 
-				case 1:
+					case 1:
 						FlxG.switchState(new HowToPlayState());
-				case 2:
-
+					case 2: 
+						#if debug
+						Game.Scores = [0 => 100, 1 => 200, 2 => 300];
+						FlxG.switchState(new GameWinState());
+						#else
 						FlxG.switchState(new CreditsState());
+						#end
 					#if desktop
 					case 3:
+						
 						openfl.system.System.exit(0);
+						
 					#end
 				}
 			});
-
 		}
 	}
 
