@@ -20,8 +20,9 @@
 - [x] create title
 - [x] create pause menu
 - [x] create credits menu
-- [ ] Sound Effects
+- [x] Sound Effects
 - [x] Music
-- [ ] Add animation of star flying to the hud when earned
+- [x] Add animation of star flying to the hud when earned
+- [ ] Hiscore
 
 <https://axolstudio.itch.io/long-road-to-fresno?password=nightcrawlers>

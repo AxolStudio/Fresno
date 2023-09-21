@@ -1,5 +1,6 @@
 package ui;
 
+import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxBitmapFont;
@@ -28,6 +29,8 @@ class HUD extends FlxGroup
 	private var posStart:Float;
 	private var posEnd:Float;
 
+	public var starPos:FlxPoint;
+
 	public function new(State:PlayState):Void
 	{
 		super();
@@ -53,6 +56,8 @@ class HUD extends FlxGroup
 			stars.push(star);
 			add(star);
 		}
+
+		starPos = FlxPoint.get(stars[4].x, stars[4].y);
 
 		add(meter = new FlxSprite("assets/images/meter.png"));
 		meter.y = 8;

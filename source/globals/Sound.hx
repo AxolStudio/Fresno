@@ -67,7 +67,7 @@ class Sound
 		}
 	}
 
-	public static function play(SoundName:String, Volume:Float = 0.5, ?ProximityTo:ProximityData):FlxSound
+	public static function play(SoundName:String, Volume:Float = 1.5, ?ProximityTo:ProximityData):FlxSound
 	{
 		if (soundCount >= MAX_SOUNDS)
 		{

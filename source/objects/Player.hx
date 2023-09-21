@@ -1,6 +1,9 @@
 package objects;
 
 
+import globals.Sound;
+import globals.Game;
+import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import states.PlayState;
@@ -18,7 +21,7 @@ class Player extends FlxSprite {
 	public var jumpingHeight:Float = 0;
 	private var jumpVel:Float = 120;
 	private var jumpGravity:Float = 100;
-	public var energy:Int = 0;
+	public var energy(default, set):Int = 0;
 	public var combo:Int = 1;
 	public var score:Int = 0;
 	public var skateTimer:Float = 0;
@@ -65,6 +68,8 @@ class Player extends FlxSprite {
 		if (FlxFlicker.isFlickering(this) || !alive)
 			return;
 
+		Sound.play("collide");
+
 		// #if !debug
 		health = health - damage;
 		// #end
@@ -104,8 +109,21 @@ class Player extends FlxSprite {
 		}
 	}
 
+	private function set_energy(Value:Int):Int
+	{
+		energy = Value;
+		while (energy >= 5)
+		{
+			energy -= 5;
+			
+			Game.State.spawnPowerup();
+		}
+		return energy;
+	}
+
 	public function giveSkateboard():Void
 	{
+		Sound.play("skateboard");
 		skateTimer += 10;
 		animation.play(jumpingHeight > 0 ? "skatejump" : "skate", true);
 
@@ -117,6 +135,7 @@ class Player extends FlxSprite {
 	{
 		var up:Bool = Actions.up.triggered;
 		var down:Bool = Actions.down.triggered;
+		var wasJumping:Bool = jumping;
 
 		if (up && down)
 		if (up && down)
@@ -156,6 +175,11 @@ class Player extends FlxSprite {
 		else if (jumpingHeight > 0)
 			jumpingHeight -= jumpGravity * elapsed;
 
+		if (!wasJumping && jumping)
+		{
+			Sound.play("jump");
+		}
+
 		if (jumpingHeight < 0)
 		{
 			jumpingHeight = 0;
@@ -165,18 +189,21 @@ class Player extends FlxSprite {
 			if (wasJumpingOver.length > 0)
 			{
 				combo += wasJumpingOver.length;
-				energy += wasJumpingOver.length;
+				// energy += wasJumpingOver.length;
+
+				for (i in 0...wasJumpingOver.length)
+				{
+					new FlxTimer().start(i * .1, (_) ->
+					{
+						Game.State.spawnStar();
+					});
+				}
 
 				score += wasJumpingOver.length * combo;
 
 				// if energy maxed, then spawn a powerup!
 				wasJumpingOver = [];
-				if (energy >= 5)
-				{
-					energy -= 5;
-					// spawn powerup
-					state.spawnPowerup();
-				}
+
 			}
 		}
 

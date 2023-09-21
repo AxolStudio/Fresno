@@ -1,5 +1,9 @@
 package states;
 
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.math.FlxVelocity;
+import flixel.math.FlxPoint;
 import axollib.AxolAPI;
 import flixel.util.FlxDestroyUtil;
 import flixel.graphics.frames.FlxBitmapFont;
@@ -44,8 +48,8 @@ class PlayState extends FlxState
 	public var lyrPowerups:FlxTypedGroup<Powerup>;
 	public var lyrShadow:FlxTypedGroup<Shadow>;
 	public var lyrPlayer:FlxTypedGroup<Player>;
-
 	public var lyrHUD:FlxTypedGroup<FlxSprite>;
+	public var lyrStars:FlxTypedGroup<Star>;
 
 	public var player:Player;
 
@@ -91,6 +95,7 @@ class PlayState extends FlxState
 		lyrPlayer = FlxDestroyUtil.destroy(lyrPlayer);
 		vignette = FlxDestroyUtil.destroy(vignette);
 		hud = FlxDestroyUtil.destroy(hud);
+		lyrStars = FlxDestroyUtil.destroy(lyrStars);
 
 		super.destroy();
 	}
@@ -143,6 +148,7 @@ class PlayState extends FlxState
 		levelDistanceMax = Game.LevelLengths.get(levelTheme);
 
 		add(hud = new HUD(this));
+		add(lyrStars = new FlxTypedGroup<Star>());
 
 		levelDistance = -FlxG.width;
 
@@ -248,6 +254,7 @@ class PlayState extends FlxState
 		}
 		lyrPowerups.add(powerup);
 		addShadow(powerup);
+		Sound.play("power_spawn");
 	}
 
 	public function addShadow(Target:FlxSprite):Void
@@ -378,6 +385,8 @@ class PlayState extends FlxState
 		switch (U.type)
 		{
 			case PowerupType.HEALTH:
+				Sound.play("heart");
+
 				player.health++;
 				if (player.health > 5)
 					player.health = 5;
@@ -507,6 +516,17 @@ class PlayState extends FlxState
 		else
 			return 0;
 	}
+	public function spawnStar():Void
+	{
+		var star:Star = lyrStars.recycle(Star);
+		if (star == null)
+		{
+			star = new Star();
+		}
+		star.spawn();
+		lyrStars.add(star);
+		Sound.play("star_spawn");
+	}
 }
 
 class PauseSubState extends FlxSubState
@@ -565,5 +585,42 @@ class PauseSubState extends FlxSubState
 	{
 		cb = null;
 		super.destroy();
+	}
+}
+class Star extends FlxSprite
+{
+	public function new()
+	{
+		super();
+		loadGraphic("assets/images/star.png");
+		scrollFactor.set();
+	}
+
+	public function spawn():Void
+	{
+		var playerPos:FlxPoint = Game.State.player.getScreenPosition();
+		var newx:Float = playerPos.x + (Game.State.player.width / 2) - (width / 2);
+		var newy:Float = playerPos.y + (height / 2);
+
+		reset(newx, newy);
+		alpha = 0;
+		FlxTween.tween(this, {alpha: 1}, .25, {ease: FlxEase.sineIn});
+		FlxVelocity.accelerateTowardsPoint(this, Game.State.hud.starPos, 1000, 1000);
+	}
+
+	override public function update(elapsed:Float):Void
+	{
+		super.update(elapsed);
+
+		if (alive && exists)
+		{
+			if (y < Game.State.hud.starPos.y)
+			{
+				Sound.play('star_${Game.State.player.energy + 1}');
+
+				Game.State.player.energy++;
+				kill();
+			}
+		}
 	}
 }
