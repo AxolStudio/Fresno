@@ -16,15 +16,18 @@
 	<!-- ____________________________ Window Settings ___________________________ -->
 
 	<!--These window settings apply to all targets-->
-<window width="640" height="360" fps="60" background="#000000" hardware="true" vsync="false" />
+	<window width="640" height="360" fps="60" background="#000000" hardware="true" vsync="false" />
+
 
 
 
 	<!--HTML5-specific-->
-	<window if="html5" resizable="false" />
+	<window if="html5" resizable="true" />
+
 
 	<!--Desktop-specific-->
-<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" />
+	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" />
+
 
 
 
@@ -33,25 +36,30 @@
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 
-<set name="destination" value="local" />
-<set name="destination" value="steam" if="steam" />
-<set name="destination" value="itch" if="itch" />
+	<set name="destination" value="local" />
+	<set name="destination" value="steam" if="steam" />
+	<set name="destination" value="itch" if="itch" />
 
-<set name="destination" value="${destination}-testing" if="testing" />
-<set name="destination" value="${destination}-demo" if="demo" />
 
-<set name="destination" value="${destination}/final" if="final" />
+	<set name="destination" value="${destination}-testing" if="testing" />
+	<set name="destination" value="${destination}-demo" if="demo" />
 
-<set name="BUILD_DIR" value="export/${destination}" />
 
-	
+	<set name="destination" value="${destination}/final" if="final" />
+
+
+	<set name="BUILD_DIR" value="export/${destination}" />
+
+
+
 	<source path="source" />
 	<assets path="assets" />
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />
-<haxelib name="flixel-addons" />
+	<haxelib name="flixel-addons" />
+
 
 	<include path="axollib/include.xml" />
 
@@ -77,7 +85,8 @@
 	<!--<haxedef name="FLX_NO_NATIVE_CURSOR" />-->
 
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
-	<haxedef name="FLX_NO_MOUSE" if="mobile" />
+	<haxedef name="FLX_NO_MOUSE" />
+
 	<haxedef name="FLX_NO_KEYBOARD" if="mobile" />
 	<haxedef name="FLX_NO_TOUCH" if="desktop" />
 	<!--<haxedef name="FLX_NO_GAMEPAD" />-->

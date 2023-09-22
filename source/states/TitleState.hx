@@ -181,7 +181,7 @@ class Menu extends FlxSubState
 				widest = o.width;
 		}
 
-		frame = new Frame(widest + (selector.width * 2) + 32, options.length * (options[0].height + 2) + 8);
+		frame = new Frame(widest + (selector.width * 2) + 32, (options.length * (options[0].height + 4)) + 12);
 		frame.x = FlxG.width - frame.width - 8;
 		frame.y = FlxG.height - frame.height - 8;
 		add(frame);
@@ -190,7 +190,7 @@ class Menu extends FlxSubState
 		{
 			opt = options[i];
 			opt.x = frame.x + 16 + selector.width;
-			opt.y = frame.y + 8 + i * (opt.height + 2);
+			opt.y = frame.y + 8 + (i * (opt.height + 4));
 			opt.color = Game.OUR_BLACK;
 			add(opt);
 		}

@@ -61,7 +61,7 @@ class Game
 
 	public static var LevelMusic:Map<Int, String> = [0 => "forest", 1 => "suburbs", 2 => "city"];
 
-	public static var RememberInits:Array<Int> = [1, 0, 0];
+	public static var RememberInits:Array<Int> = [0, 0, 0];
 
 	public static function initializeGame():Void
 	{

@@ -358,7 +358,7 @@ class PlayState extends FlxState
 					{
 						// game win!?
 						AxolAPI.sendEvent('Game Won!');
-						FlxG.switchState(new TitleState());
+						FlxG.switchState(new GameWinState());
 					}
 				});
 			}
