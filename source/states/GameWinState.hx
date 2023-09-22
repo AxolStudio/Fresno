@@ -32,12 +32,11 @@ class GameWinState extends FlxState
 
 	private var playerTotal:Int = 0;
 
-	private var hiScoreMsg:RainbowText;
+	private var submitScoreMsg:NormalText;
 	private var inits:Array<NormalText> = [];
 	private var whichInit:Int = 0;
 	private var initVals:Array<Int> = [0, 0, 0];
 	private var cursor:FlxSprite;
-	private var nextText:NormalText;
 	private var title:FlxBitmapText;
 	private var frameWidth:Float = 0;
 	private var frameHeight:Float = 0;
@@ -46,7 +45,6 @@ class GameWinState extends FlxState
 	private var ready:Bool = false;
 
 	private var end:FlxSprite;
-	private var hiScoreSlot:Int = -1;
 
 	public var alpha(default, set):Float = 0;
 
@@ -101,11 +99,11 @@ class GameWinState extends FlxState
 			frameHeight += scoresLeft[s].height;
 		}
 
-		hiScoreMsg = new RainbowText("* New Hi-Score! *");
-		hiScoreMsg.alpha = 0;
+		submitScoreMsg = new NormalText("Submit Your Score");
+		submitScoreMsg.alpha = 0;
 
 		initVals = [Game.RememberInits[0], Game.RememberInits[1], Game.RememberInits[2]];
-		
+
 		var init:NormalText;
 		init = new NormalText("X");
 		init.alpha = 0;
@@ -119,8 +117,6 @@ class GameWinState extends FlxState
 		init.alpha = 0;
 		inits.push(init);
 
-		nextText = new NormalText("Press Any Key");
-		nextText.alpha = 0;
 
 		cursor = new FlxSprite();
 		cursor.loadGraphic("assets/images/cursor.png", true, 15, 17, false, "cursor");
@@ -128,41 +124,10 @@ class GameWinState extends FlxState
 		cursor.animation.play("blink");
 		cursor.visible = false;
 
+		frameHeight += submitScoreMsg.height + 4 + 4 + inits[0].height + 4;
+
 		end = new FlxSprite("assets/images/end.png");
 		end.alpha = 0;
-
-		AxolAPI.getScores(scoresGot);
-
-		super.create();
-	}
-
-	private function scoresGot(Msg:Object):Void
-	{
-		var hasHi:Bool = false;
-
-		var hiScores:Array<Object> = Msg.data.scores.scores;
-
-		trace(hiScores);
-
-		for (h in 0...hiScores.length)
-		{
-			if (hiScores[h].amount <= playerTotal)
-			{
-				hasHi = true;
-				hiScoreSlot = h;
-			}
-		}
-
-		if (hasHi)
-		{
-			frameHeight += inits[0].height + hiScoreMsg.height + 12;
-			if ((inits[0].width * 3) + 8 > frameWidth)
-				frameWidth = (inits[0].width * 3) + 8;
-		}
-		else
-		{
-			frameHeight += nextText.height;
-		}
 
 		frame = new InnerFrame(frameWidth + 32 + 12, frameHeight);
 		frame.screenCenter(FlxAxes.X);
@@ -183,40 +148,30 @@ class GameWinState extends FlxState
 			add(scoresRight[s]);
 		}
 
-		if (hasHi)
+		submitScoreMsg.screenCenter(FlxAxes.X);
+		submitScoreMsg.y = scoresLeft[scoresLeft.length - 1].y + scoresLeft[scoresLeft.length - 1].height + 4;
+		add(submitScoreMsg);
+
+		var w:Float = 16;
+		var space:Float = 4;
+		var totalWidth:Float = (w * 4) + (space * 3);
+		var startX:Float = (FlxG.width / 2) - (totalWidth / 2);
+		trace(startX, totalWidth);
+		for (i in 0...inits.length)
 		{
-			hiScoreMsg.screenCenter(FlxAxes.X);
-			hiScoreMsg.y = scoresLeft[scoresLeft.length - 1].y + scoresLeft[scoresLeft.length - 1].height + 4;
+			inits[i].x = startX + (w * i) + (space * i) + ((w - inits[i].width) / 2);
 
-			add(hiScoreMsg);
-
-			var w:Float = 16;
-			var space:Float = 4;
-			var totalWidth:Float = (w * 4) + (space * 3);
-			var startX:Float = (FlxG.width / 2) - (totalWidth / 2);
-			trace(startX, totalWidth);
-			for (i in 0...inits.length)
-			{
-				inits[i].x = startX + (w * i) + (space * i) + ((w - inits[i].width) / 2);
-
-				inits[i].text = letters[initVals[i]];
-				inits[i].y = hiScoreMsg.y + hiScoreMsg.height + 4;
-				add(inits[i]);
-			}
-
-			end.x = inits[2].x + w + space;
-			end.y = inits[2].y;
-			add(end);
-
-			setCursor(0);
-			add(cursor);
+			inits[i].text = letters[initVals[i]];
+			inits[i].y = submitScoreMsg.y + submitScoreMsg.height + 4;
+			add(inits[i]);
 		}
-		else
-		{
-			nextText.screenCenter(FlxAxes.X);
-			nextText.y = scoresLeft[scoresLeft.length - 1].y + scoresLeft[scoresLeft.length - 1].height + 4;
-			add(nextText);
-		}
+
+		end.x = inits[2].x + w + space;
+		end.y = inits[2].y;
+		add(end);
+
+		setCursor(0);
+		add(cursor);
 
 		FlxTween.tween(this, {alpha: 1}, .5, {
 			onComplete: (_) ->
@@ -225,6 +180,7 @@ class GameWinState extends FlxState
 				ready = true;
 			}
 		});
+		super.create();
 	}
 
 	override public function update(elapsed:Float):Void
@@ -299,7 +255,7 @@ class GameWinState extends FlxState
 		FlxTween.tween(this, {alpha: 0}, .5, {
 			onComplete: (_) ->
 			{
-				openSubState(new HiScoreState(Msg, hiScoreSlot));
+				openSubState(new HiScoreState(Msg));
 			}
 		});
 	}
@@ -331,8 +287,7 @@ class GameWinState extends FlxState
 		}
 
 		title.alpha = alpha;
-		hiScoreMsg.alpha = alpha;
-		nextText.alpha = alpha;
+		submitScoreMsg.alpha = alpha;
 
 		for (i in inits)
 		{
@@ -360,11 +315,12 @@ class HiScoreState extends FlxSubState
 
 	var ready:Bool = false;
 
-	public function new(Msg:Object, HiSlot:Int):Void
+	public function new(Msg:Object):Void
 	{
 		super();
+		trace(Msg);
 		scores = Msg.data.scores.scores;
-		hiSlot = HiSlot;
+		hiSlot = Std.parseInt(Msg.data.scores.lastId);
 	}
 
 	override public function create():Void
@@ -378,23 +334,48 @@ class HiScoreState extends FlxSubState
 		var scoreL:OneOfTwo<NormalText, RainbowText>;
 		var scoreR:OneOfTwo<NormalText, RainbowText>;
 
-		for (s in 0...scores.length)
+		var score:Object;
+		var showedMe:Bool = false;
+		for (s in 0...10)
 		{
-			if (hiSlot == s)
+			if (scores.length <= s)
+				break;
+			score = scores[s];
+			trace(hiSlot, score.id);
+			if (hiSlot == score.id)
 			{
-				scoreL = new RainbowText(scores[s].initials);
-				scoreR = new RainbowText(Std.string(scores[s].amount));
+				showedMe = true;
+				scoreL = new RainbowText('${score.position}: ${score.initials}');
+				scoreR = new RainbowText(Std.string(score.amount));
 			}
 			else
 			{
-				scoreL = new NormalText(scores[s].initials);
-				scoreR = new NormalText(Std.string(scores[s].amount));
+				scoreL = new NormalText('${score.position}: ${score.initials}');
+				scoreR = new NormalText(Std.string(score.amount));
 			}
 			cast(scoreL, NormalText).alpha = 0;
 			cast(scoreR, NormalText).alpha = 0;
 			scoresLeft.push(scoreL);
 			scoresRight.push(scoreR);
 			frameHeight += cast(scoreL, NormalText).height;
+		}
+
+		if (!showedMe)
+		{
+			for (s in 10...scores.length)
+			{
+				if (scores[s].id == hiSlot)
+				{
+					score = scores[s];
+					scoreL = new RainbowText('${score.position}: ${score.initials}');
+					scoreR = new RainbowText(Std.string(score.amount));
+					cast(scoreL, NormalText).alpha = 0;
+					cast(scoreR, NormalText).alpha = 0;
+					scoresLeft.push(scoreL);
+					scoresRight.push(scoreR);
+					frameHeight += cast(scoreL, NormalText).height;
+				}
+			}
 		}
 
 		exitText = new NormalText("Press Any Key to Quit");
@@ -466,6 +447,6 @@ class HiScoreState extends FlxSubState
 
 		exitText.alpha = alpha;
 
-        return alpha;
-    }
+		return alpha;
+	}
 }
