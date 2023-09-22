@@ -40,6 +40,7 @@ class TitleState extends FlxState
 
 	override public function create():Void
 	{
+		FlxG.camera.pixelPerfectRender = true;
 		FlxG.autoPause = false;
 
 		add(new FlxSprite(0, 0, "assets/images/title_back.png"));
@@ -254,18 +255,16 @@ class Menu extends FlxSubState
 
 					case 1:
 						FlxG.switchState(new HowToPlayState());
-					case 2: 
-						#if debug
-						Game.Scores = [0 => 100, 1 => 200, 2 => 300];
-						FlxG.switchState(new GameWinState());
-						#else
+					case 2:
+						// #if debug
+						// Game.Scores = [0 => 100, 1 => 200, 2 => 300];
+						// FlxG.switchState(new GameWinState());
+						// #else
 						FlxG.switchState(new CreditsState());
-						#end
+						// #end
 					#if desktop
 					case 3:
-						
 						openfl.system.System.exit(0);
-						
 					#end
 				}
 			});

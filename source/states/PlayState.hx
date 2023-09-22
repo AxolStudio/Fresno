@@ -100,13 +100,10 @@ class PlayState extends FlxState
 		super.destroy();
 	}
 
-
 	override public function create()
 	{
-
 		FlxG.autoPause = true;
-
-		
+		FlxG.camera.pixelPerfectRender = true;
 
 		Game.State = this;
 
@@ -132,7 +129,6 @@ class PlayState extends FlxState
 		add(lyrStreetObjects = new FlxTypedGroup<Obstacle>());
 		add(lyrPowerups = new FlxTypedGroup<Powerup>());
 		add(lyrPlayer = new FlxTypedGroup<Player>());
-		
 
 		createBackground();
 
@@ -485,8 +481,6 @@ class PlayState extends FlxState
 						obstacle = Type.createInstance(which, null);
 					}
 					addShadow(obstacle);
-
-
 				}
 				else
 				{
@@ -503,8 +497,6 @@ class PlayState extends FlxState
 				laneX[l] = CurrentX + obstacle.width + (16 * FlxG.random.int(1, 4));
 			}
 		}
-
-
 	}
 
 	private function sortObjects(Direction:Int, A:Obstacle, B:Obstacle):Int
@@ -516,6 +508,7 @@ class PlayState extends FlxState
 		else
 			return 0;
 	}
+
 	public function spawnStar():Void
 	{
 		var star:Star = lyrStars.recycle(Star);
@@ -587,6 +580,7 @@ class PauseSubState extends FlxSubState
 		super.destroy();
 	}
 }
+
 class Star extends FlxSprite
 {
 	public function new()

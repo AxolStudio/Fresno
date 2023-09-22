@@ -117,7 +117,6 @@ class GameWinState extends FlxState
 		init.alpha = 0;
 		inits.push(init);
 
-
 		cursor = new FlxSprite();
 		cursor.loadGraphic("assets/images/cursor.png", true, 15, 17, false, "cursor");
 		cursor.animation.add("blink", [0, 1], 10, true);
@@ -325,6 +324,8 @@ class HiScoreState extends FlxSubState
 
 	override public function create():Void
 	{
+		FlxG.camera.pixelPerfectRender = true;
+
 		title = new FlxBitmapText(FlxBitmapFont.fromAngelCode("assets/images/fat_text.png", "assets/image/fat_text.xml"));
 		title.text = "Hi-Scores";
 		title.screenCenter(FlxAxes.X);

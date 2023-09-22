@@ -49,7 +49,6 @@ class Actions
 
 		Actions.leftStick = new FlxActionAnalog();
 
-
 		var gameSet:FlxActionSet = new FlxActionSet("GameControls", [
 			Actions.up, Actions.down, Actions.jump, Actions.pause, Actions.upUI, Actions.downUI, Actions.leftUI, Actions.rightUI, Actions.pressUI,
 			Actions.pressUIPress, Actions.any

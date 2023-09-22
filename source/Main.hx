@@ -33,8 +33,6 @@ class Main extends Sprite
 
 		addChild(new FlxGame(320, 180, DissolveState, 60, 60, true, startFull));
 
-		
-
 		FlxG.scaleMode = new PixelPerfectScaleMode();
 	}
 }

@@ -25,6 +25,6 @@
 - [x] Music
 - [x] Add animation of star flying to the hud when earned
 - [x] Hiscore
-- [ ] fix text in how-to and credits screens
+- [x] fix text in how-to and credits screens
 
 <https://axolstudio.itch.io/long-road-to-fresno?password=nightcrawlers>

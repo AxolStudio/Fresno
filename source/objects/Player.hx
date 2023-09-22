@@ -1,6 +1,5 @@
 package objects;
 
-
 import globals.Sound;
 import globals.Game;
 import flixel.util.FlxTimer;
@@ -13,14 +12,17 @@ import flixel.FlxSprite;
 
 using flixel.effects.FlxFlicker;
 
-class Player extends FlxSprite {
-
+class Player extends FlxSprite
+{
 	private var jumpTimer:Float = -1;
 	private var jumping:Bool = false;
 	private var onFloor:Bool = true;
+
 	public var jumpingHeight:Float = 0;
+
 	private var jumpVel:Float = 120;
 	private var jumpGravity:Float = 100;
+
 	public var energy(default, set):Int = 0;
 	public var combo:Int = 1;
 	public var score:Int = 0;
@@ -31,8 +33,8 @@ class Player extends FlxSprite {
 	public var state:PlayState;
 
 	public function new(State:PlayState):Void
-    {
-        super();
+	{
+		super();
 		state = State;
 
 		loadGraphic("assets/images/ash.png", true, 16, 16, false, "player");
@@ -115,7 +117,7 @@ class Player extends FlxSprite {
 		while (energy >= 5)
 		{
 			energy -= 5;
-			
+
 			Game.State.spawnPowerup();
 		}
 		return energy;
@@ -130,7 +132,6 @@ class Player extends FlxSprite {
 		// puff of smoke?
 	}
 
-
 	public function movement(elapsed:Float):Void
 	{
 		var up:Bool = Actions.up.triggered;
@@ -138,8 +139,8 @@ class Player extends FlxSprite {
 		var wasJumping:Bool = jumping;
 
 		if (up && down)
-		if (up && down)
-			up = down = false;
+			if (up && down)
+				up = down = false;
 
 		if (up)
 			velocity.y = -maxVelocity.y;
@@ -203,10 +204,8 @@ class Player extends FlxSprite {
 
 				// if energy maxed, then spawn a powerup!
 				wasJumpingOver = [];
-
 			}
 		}
-
 	}
 
 	override public function update(elapsed:Float):Void
@@ -238,5 +237,4 @@ class Player extends FlxSprite {
 		if (animation.name != NewAnimation)
 			animation.play(NewAnimation, true);
 	}
-
 }

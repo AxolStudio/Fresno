@@ -18,7 +18,6 @@ import flixel.FlxSubState;
 
 class HowToPlayState extends FlxState
 {
-
 	public var ready:Bool = false;
 
 	public function new()
@@ -28,11 +27,13 @@ class HowToPlayState extends FlxState
 
 	override public function create():Void
 	{
+		FlxG.camera.pixelPerfectRender = true;
+
 		bgColor = FlxColor.TRANSPARENT;
 		FlxG.autoPause = false;
 
 		var frame:FlxSprite = new FlxSprite("assets/images/how-to-back.png");
-		
+
 		add(frame);
 
 		var text:NormalText = new NormalText("How to Play");
@@ -56,7 +57,7 @@ class HowToPlayState extends FlxState
 		keyboard.y = text.y + text.height - 2 + (126 / 2) - (keyboard.height / 2);
 		add(keyboard);
 
-		var instructions:NormalText = new NormalText("Avoid obstacles to make it home to Fresno before sunrise!\nJump over obstacles to gain Stars. 5 x Stars = reward!");
+		var instructions:NormalText = new NormalText("Avoid obstacles to make it home to Fresno before sunrise!\n\nJump over obstacles to gain Stars.\n\nEvery 5 Stars spawns a reward!");
 		instructions.color = Game.OUR_BLACK;
 		instructions.autoSize = false;
 		instructions.fieldWidth = Std.int(frame.width - 12) - 16;
@@ -64,14 +65,13 @@ class HowToPlayState extends FlxState
 		instructions.wordWrap = true;
 		instructions.alignment = FlxTextAlign.CENTER;
 		instructions.x = frame.x + 9;
-		instructions.y = text.y + text.height - 2 + 126 + 2;
+		instructions.y = text.y + text.height - 2 + 126 + 8;
 		add(instructions);
 
 		FlxG.camera.fade(Game.OUR_BLACK, .5, true, () ->
 		{
 			ready = true;
 		});
-		
 
 		super.create();
 	}
@@ -92,5 +92,4 @@ class HowToPlayState extends FlxState
 			});
 		}
 	}
-
 }

@@ -1,6 +1,5 @@
 package objects;
 
-
 import flixel.math.FlxPoint;
 import flixel.math.FlxVelocity;
 import flixel.FlxG;
@@ -14,7 +13,6 @@ class Rat extends Obstacle implements IAnimal
 		super();
 		loadGraphic("assets/images/rat.png", true, 32, 32, false, "rat");
 
-		
 		animation.add("run", [5, 6, 7, 8, 9], 16, true, true);
 
 		updateHitbox();
