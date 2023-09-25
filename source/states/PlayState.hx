@@ -239,7 +239,7 @@ class PlayState extends FlxState
 		}
 		var pX:Float = FlxG.camera.scroll.x + FlxG.width;
 		var pY:Float = zoneTop + (FlxG.random.int(1, 4) * 16);
-		trace(player.health, (1 - ((player.health - 1) / 4)) * 100);
+
 
 		if (FlxG.random.bool((1 - ((player.health - 1) / 4)) * 100))
 		{
@@ -451,7 +451,7 @@ class PlayState extends FlxState
 	{
 		// if the left-most background object has scrolled off the screen to the left, move it to the end of the last background object
 		var bg:FlxSprite = lyrBackground.members[0];
-		// trace(bg.x + bg.width + " < " + camera.scroll.x);
+
 		if (bg.x + bg.width < camera.scroll.x - 32)
 		{
 			bg.x = lyrBackground.members[lyrBackground.length - 1].x + lyrBackground.members[lyrBackground.length - 1].width;

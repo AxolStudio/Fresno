@@ -152,7 +152,12 @@ class NGAPI
 	static public function postPlayerHiscore(Id:String, Value:Int, ?Callback:Void->Void):Void
 	{
 		if (!isLoggedIn)
+		{
+			if (Callback != null)
+				Callback();
+
 			return;
+		}
 
 		if (NG.core.scoreBoards == null)
 			throw "Cannot access scoreboards until ngScoresLoaded is dispatched";
@@ -177,17 +182,23 @@ class NGAPI
 		var numMedalsLocked = 0;
 		for (medal in NG.core.medals)
 		{
+			medalsByName.set(medal.name, medal.id);
 			if (!medal.unlocked)
 				numMedalsLocked++;
 
+			#if debug
+			unlockMedalByName(medal.name);
+			#end
+
 			numMedals++;
 		}
+
 	}
 
 	static public function unlockMedalByName(Name:String):Void
 	{
 		if (!medalsByName.exists(Name))
-			throw 'invalid name:%Name';
+			throw 'invalid name: ${Name}';
 
 		unlockMedal(medalsByName.get(Name));
 	}
@@ -213,13 +224,6 @@ class NGAPI
 		return isLoggedIn && NG.core.medals.get(Id).unlocked;
 	}
 
-	static public function hasMedalByName(Name:String):Bool
-	{
-		if (!medalsByName.exists(Name))
-			throw 'invalid name:%Name';
-
-		return hasMedal(medalsByName.get(Name));
-	}
 
 	static public function logEvent(Event:NgEvent, Once = false)
 	{
@@ -252,5 +256,5 @@ enum abstract NgEvent(String) from String to String
 	var BEAT_SUBURBS = "Beat Suburbs Level";
 }
 #else
-class NGAPI {};
+class NGAPI {}
 #end

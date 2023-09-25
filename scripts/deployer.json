@@ -12,6 +12,15 @@
         },
         {
             "key": "2",
+            "platform": "windows",
+            "destination": "itch",
+            "demo": false,
+            "testing": false,
+            "credentials": "axolstudio/long-road-to-fresno",
+            "description": "Itch for [Windows]"
+        },
+        {
+            "key": "3",
             "platform": "html5",
             "destination": "ng",
             "demo": false,
