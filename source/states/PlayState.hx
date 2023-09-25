@@ -36,6 +36,7 @@ import flixel.util.FlxGradient;
 import globals.Game;
 import globals.Sound;
 import objects.Player;
+import globals.NGAPI;
 
 class PlayState extends FlxState
 {
@@ -344,10 +345,39 @@ class PlayState extends FlxState
 				FlxG.camera.fade(Game.OUR_BLACK, 1, false, () ->
 				{
 					Game.Scores.set(Game.CurrentLevel, player.score);
+					#if (html5 && ng)
+					{
+						NGAPI.unlockMedalByName(switch (Game.CurrentLevel)
+						{
+							case 0: "Forest";
+							case 1: "Suburbs";
+							case 2: "City";
+							default: "";
+						});
+
+						NGAPI.postPlayerHiscore(switch (Game.CurrentLevel)
+						{
+							case 0:
+								"Top Suburbs Scores";
+							case 1:
+								"Top Forest Scores";
+							case 2:
+								"Top City Scores";
+							default:
+								"";
+						}, player.score);
+
+						if (Game.CurrentLevel == 2)
+						{
+							NGAPI.postPlayerHiscore("Total Scores", Game.Scores.get(0) + Game.Scores.get(1) + Game.Scores.get(2));
+						}
+					}
+					#end
 					if (Game.CurrentLevel < 2)
 					{
 						Game.CurrentLevel++;
 						AxolAPI.sendEvent('Cleared Level ${Game.CurrentLevel + 1}');
+
 						FlxG.switchState(new PlayState());
 					}
 					else

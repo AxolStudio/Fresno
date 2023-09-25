@@ -4,7 +4,8 @@
 
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="fresno" file="fresno" main="Main" version="0.0.1" company="HaxeFlixel" />
+<app title="fresno" file="fresno" main="Main" version="1.0.0" company="HaxeFlixel" />
+
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
@@ -39,6 +40,8 @@
 	<set name="destination" value="local" />
 	<set name="destination" value="steam" if="steam" />
 	<set name="destination" value="itch" if="itch" />
+<set name="destination" value="ng" if="ng" />
+
 
 
 	<set name="destination" value="${destination}-testing" if="testing" />
@@ -62,6 +65,8 @@
 
 
 	<include path="axollib/include.xml" />
+
+<haxelib name="newgrounds" if="ng" />
 
 
 	<!--In case you want to use the addons package-->
@@ -109,4 +114,10 @@
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
+<icon path="assets/icons/icon-16.png" width="16" height="16"/>
+<icon path="assets/icons/icon-24.png" width="24" height="24"/>
+<icon path="assets/icons/icon-32.png" width="32" height="32"/>
+<icon path="assets/icons/icon-48.png" width="48" height="48"/>
+<icon path="assets/icons/icon-256.png" width="256" height="256"/>
+
 </project>

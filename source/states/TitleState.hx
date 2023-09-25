@@ -1,5 +1,6 @@
 package states;
 
+import globals.NGAPI;
 import flixel.FlxBasic;
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxMath;
@@ -256,12 +257,15 @@ class Menu extends FlxSubState
 					case 1:
 						FlxG.switchState(new HowToPlayState());
 					case 2:
-						// #if debug
-						// Game.Scores = [0 => 100, 1 => 200, 2 => 300];
-						// FlxG.switchState(new GameWinState());
-						// #else
+						#if debug
+						Game.Scores = [0 => 100, 1 => 200, 2 => 300];
+						NGAPI.postPlayerHiscore("Total Scores", Game.Scores.get(0) + Game.Scores.get(1) + Game.Scores.get(2), () ->
+						{
+							FlxG.switchState(new GameWinState());
+						});
+						#else
 						FlxG.switchState(new CreditsState());
-						// #end
+						#end
 					#if desktop
 					case 3:
 						openfl.system.System.exit(0);

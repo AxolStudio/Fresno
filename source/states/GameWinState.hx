@@ -1,7 +1,13 @@
 package states;
 
-import flixel.util.typeLimit.OneOfTwo;
 import flixel.FlxSubState;
+import globals.NGAPI;
+#if (html5 && ng)
+import io.newgrounds.swf.ScoreBrowser;
+import io.newgrounds.objects.Score;
+#end
+import flixel.util.typeLimit.OneOfTwo;
+
 import globals.Actions;
 import flixel.FlxG;
 import flixel.math.FlxMath;
@@ -22,6 +28,8 @@ class GameWinState extends FlxState
 {
 	public var scoresReady:Bool = false;
 
+	#if (html5 && ng)
+	#else
 	public var letters:Array<String> = [
 		" ", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2",
 		"3", "4", "5", "6", "7", "8", "9", "!"
@@ -41,15 +49,19 @@ class GameWinState extends FlxState
 	private var frameWidth:Float = 0;
 	private var frameHeight:Float = 0;
 	private var frame:InnerFrame;
-
+	private var end:FlxSprite;
+	#end
 	private var ready:Bool = false;
 
-	private var end:FlxSprite;
+
 
 	public var alpha(default, set):Float = 0;
 
 	override public function create():Void
 	{
+		#if (html5 && ng)
+		NGAPI.requestHiscores("Total Scores", 10, 0, false, gotScores);
+		#else
 		// get the current hiscores
 
 		title = new FlxBitmapText(FlxBitmapFont.fromAngelCode("assets/images/fat_text.png", "assets/image/fat_text.xml"));
@@ -179,6 +191,7 @@ class GameWinState extends FlxState
 				ready = true;
 			}
 		});
+		#end
 		super.create();
 	}
 
@@ -188,7 +201,9 @@ class GameWinState extends FlxState
 
 		if (!ready)
 			return;
+		#if (html5 && ng)
 
+		#else
 		var left:Bool = Actions.leftUI.triggered;
 		var right:Bool = Actions.rightUI.triggered;
 		var up:Bool = Actions.upUI.triggered;
@@ -226,8 +241,9 @@ class GameWinState extends FlxState
 			else
 				submit();
 		}
+		#end
 	}
-
+	#if !(html5 && ng)
 	private function changeLetter(Amount:Int):Void
 	{
 		if (whichInit == 3)
@@ -247,6 +263,7 @@ class GameWinState extends FlxState
 
 		Game.RememberInits = [initVals[0], initVals[1], initVals[2]];
 		AxolAPI.sendScore(playerTotal, inits[0].text + inits[1].text + inits[2].text, scoreSent);
+
 	}
 
 	private function scoreSent(Msg:Object):Void
@@ -273,11 +290,12 @@ class GameWinState extends FlxState
 			cursor.y = inits[whichInit].y - 5;
 		}
 	}
+	#end
 
 	function set_alpha(Value:Float):Float
 	{
 		alpha = FlxMath.bound(Value, 0, 1);
-
+		#if !(html5 && ng)
 		frame.alpha = alpha;
 
 		for (s in 0...scoresLeft.length)
@@ -295,9 +313,17 @@ class GameWinState extends FlxState
 
 		end.alpha = alpha;
 		cursor.alpha = alpha;
-
+		#end
 		return alpha;
 	}
+	#if (html5 && ng)
+	private function gotScores(Scores:Array<Score>):Void
+	{
+		trace(Scores);
+		// scoresReady = true;
+		// openSubState(new HiScoreState(Msg));
+	}
+	#end
 }
 
 class HiScoreState extends FlxSubState

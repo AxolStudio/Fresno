@@ -9,6 +9,15 @@
             "testing": false,
             "credentials": "axolstudio/long-road-to-fresno",
             "description": "Itch for [HTML5]"
+        },
+        {
+            "key": "2",
+            "platform": "html5",
+            "destination": "ng",
+            "demo": false,
+            "testing": false,
+            "credentials": "",
+            "description": "NG for [HTML5]"
         }
     ]
 }

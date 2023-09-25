@@ -13,6 +13,7 @@ import objects.Dog;
 import objects.Skunk;
 import objects.IAnimal;
 import openfl.utils.ByteArray;
+import globals.NGAPI;
 
 @:file("keys/axolapi") class AxolKey extends ByteArrayData {}
 
@@ -29,7 +30,7 @@ class Game
 		CITY => "assets/images/city_back.png"
 	];
 
-	public static var LevelLengths:Map<Theme, Float> = [WOODS => 13500, SUBURBS => 18000, CITY => 27000];
+	public static var LevelLengths:Map<Theme, Float> = [WOODS => 8000, SUBURBS => 9000, CITY => 10000];
 
 	public static var Animals:Map<Theme, Array<Class<IAnimal>>> = [WOODS => [Skunk], SUBURBS => [Dog, Skunk], CITY => [Rat, Dog, Skunk]];
 	public static var AnimalsRarity:Map<Theme, Array<Float>> = [WOODS => [1], SUBURBS => [0.75, 0.25], CITY => [0.8, 0.1, 0.1]];
@@ -69,6 +70,10 @@ class Game
 			return;
 
 		AxolAPI.initialize(AXOL_KEY);
+
+		#if (html5 && ng)
+		NGAPI.init();
+		#end
 
 		NormalFont = FlxBitmapFont.fromAngelCode("assets/images/skinny_text.png", "assets/images/skinny_text.xml");
 
