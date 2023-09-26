@@ -369,10 +369,21 @@ class PlayState extends FlxState
 
 						if (Game.CurrentLevel == 2)
 						{
-							NGAPI.postPlayerHiscore("Total Scores", Game.Scores.get(0) + Game.Scores.get(1) + Game.Scores.get(2));
+							NGAPI.postPlayerHiscore("Total Scores", Game.Scores.get(0) + Game.Scores.get(1) + Game.Scores.get(2), (_) ->
+							{
+								AxolAPI.sendEvent('Game Won!');
+								FlxG.switchState(new GameWinState());
+							});
+						}
+						else
+						{
+							Game.CurrentLevel++;
+							AxolAPI.sendEvent('Cleared Level ${Game.CurrentLevel + 1}');
+
+							FlxG.switchState(new PlayState());
 						}
 					}
-					#end
+					#else
 					if (Game.CurrentLevel < 2)
 					{
 						Game.CurrentLevel++;
@@ -386,6 +397,7 @@ class PlayState extends FlxState
 						AxolAPI.sendEvent('Game Won!');
 						FlxG.switchState(new GameWinState());
 					}
+					#end
 				});
 			}
 		}

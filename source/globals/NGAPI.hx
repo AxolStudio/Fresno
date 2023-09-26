@@ -1,5 +1,6 @@
 package globals;
 
+import io.newgrounds.objects.events.Result.PostScoreData;
 #if (html5 && ng)
 import flixel.util.FlxSignal;
 import io.newgrounds.NG;
@@ -149,12 +150,12 @@ class NGAPI
 		board.requestScores(Limit, Skip, ALL, Social);
 	}
 
-	static public function postPlayerHiscore(Id:String, Value:Int, ?Callback:Void->Void):Void
+	static public function postPlayerHiscore(Id:String, Value:Int, ?Callback:Null<(CallOutcome<PostScoreData>) -> Void>):Void
 	{
 		if (!isLoggedIn)
 		{
 			if (Callback != null)
-				Callback();
+				Callback(null);
 
 			return;
 		}
@@ -166,7 +167,7 @@ class NGAPI
 		if (boardId < 0)
 			throw "Invalid board id:" + Id;
 
-		NG.core.scoreBoards.get(boardId).postScore(Value, Callback);
+		NG.core.scoreBoards.get(boardId).postScore(Value, null, Callback);
 	}
 
 	static function onMedalsRequested(outcome:Outcome<CallError>):Void

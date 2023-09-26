@@ -260,7 +260,7 @@ class Menu extends FlxSubState
 						#if debug
 						Game.Scores = [0 => 100, 1 => 200, 2 => 300];
 						#if (html5 && ng)
-						NGAPI.postPlayerHiscore("Total Scores", Game.Scores.get(0) + Game.Scores.get(1) + Game.Scores.get(2), () ->
+						NGAPI.postPlayerHiscore("Total Scores", Game.Scores.get(0) + Game.Scores.get(1) + Game.Scores.get(2), (_) ->
 						{
 						#end
 							FlxG.switchState(new GameWinState());
