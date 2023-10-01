@@ -1,7 +1,7 @@
 package globals;
 
-import io.newgrounds.objects.events.Result.PostScoreData;
 #if (html5 && ng)
+import io.newgrounds.objects.events.Result.PostScoreData;
 import flixel.util.FlxSignal;
 import io.newgrounds.NG;
 import io.newgrounds.objects.Medal;
@@ -150,7 +150,7 @@ class NGAPI
 		board.requestScores(Limit, Skip, ALL, Social);
 	}
 
-	static public function postPlayerHiscore(Id:String, Value:Int, ?Callback:Null<(CallOutcome<PostScoreData>) -> Void>):Void
+	static public function postPlayerHiscore(Id:String, Value:Int, ?Callback:Null<(Outcome<CallError>) -> Void>):Void
 	{
 		if (!isLoggedIn)
 		{

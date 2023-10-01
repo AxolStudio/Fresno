@@ -59,6 +59,11 @@ class CreditsState extends FlxState
 		t2.y = t.y + t.height + 2;
 		add(t2);
 
+		t = new NormalText("Ending Illustration: xanaroker");
+		t.x = (FlxG.width / 4 + FlxG.width / 2) - (t.width / 2);
+		t.y = t2.y;
+		add(t);
+
 		t = new NormalText("Press Any Key to Go Back");
 		t.screenCenter(FlxAxes.X);
 		t.y = FlxG.height - t.height - 2;

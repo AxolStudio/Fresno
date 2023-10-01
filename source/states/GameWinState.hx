@@ -62,7 +62,7 @@ class GameWinState extends FlxState
 
 	override public function create():Void
 	{
-		add(new FlxSprite("assets/images/temp_ending.png"));
+		add(new FlxSprite("assets/images/ending.png"));
 		
 		// get the current hiscores
 
