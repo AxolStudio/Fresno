@@ -240,7 +240,7 @@ class GameWinState extends FlxState
 			leaveEnding();
 			return;
 		}
-		if (!ready)
+		if (leaving || !ready)
 			return;
 		if (!scoresShown)
 		{
@@ -312,7 +312,7 @@ class GameWinState extends FlxState
 		FlxG.camera.fade(Game.OUR_BLACK, .25, false, () ->
 		{
 			FlxG.switchState(TitleState.new);
-		});
+		}, true);
 	}
 	#if !(html5 && ng)
 	private function changeLetter(Amount:Int):Void
@@ -341,7 +341,7 @@ class GameWinState extends FlxState
 	{
 		if (leaving)
 			return;
-		if (Msg == null || Msg.data == null || Msg.data.scores == null)
+		if (Msg == null || Msg.data == null || Msg.data.scores == null || !Std.isOfType(Msg.data.scores.scores, Array))
 		{
 			leaveEnding();
 			return;
@@ -349,7 +349,8 @@ class GameWinState extends FlxState
 		FlxTween.tween(this, {alpha: 0}, .5, {
 			onComplete: (_) ->
 			{
-				openSubState(new HiScoreState(Msg));
+				if (!leaving)
+					openSubState(new HiScoreState(Msg));
 			}
 		});
 	}
@@ -525,7 +526,7 @@ class HiScoreState extends FlxSubState
 
 		#end
 
-		exitText = new NormalText("Press Any Key to Quit");
+		exitText = new NormalText("Press Any Key or Button");
 		exitText.alpha = 0;
 		frameHeight += exitText.height;
 
@@ -548,7 +549,9 @@ class HiScoreState extends FlxSubState
 		}
 
 		exitText.screenCenter(FlxAxes.X);
-		exitText.y = cast(scoresLeft[scoresLeft.length - 1], NormalText).y + cast(scoresLeft[scoresLeft.length - 1], NormalText).height + 4;
+		exitText.y = scoresLeft.length == 0
+			? title.y + title.height + 4
+			: cast(scoresLeft[scoresLeft.length - 1], NormalText).y + cast(scoresLeft[scoresLeft.length - 1], NormalText).height + 4;
 		add(exitText);
 
 		FlxTween.tween(this, {alpha: 1}, .5, {

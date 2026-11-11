@@ -33,6 +33,7 @@ class ArcadeTestState extends FlxState
 	var frames:Int = 0;
 	var checks:Array<Dynamic> = [];
 	var pad:FlxGamepad;
+	var gameplay:PlayState;
 
 	override public function create():Void
 	{
@@ -76,9 +77,12 @@ class ArcadeTestState extends FlxState
 		neutral();
 		var input = @:privateAccess FlxG.keys._keyListMap.get(key);
 		input.press();
-		if (release)
-			input.release();
 		refresh();
+		if (release)
+		{
+			input.release();
+			refresh();
+		}
 	}
 
 	function controller(id:FlxGamepadInputID, release:Bool = false):Void
@@ -87,17 +91,28 @@ class ArcadeTestState extends FlxState
 		var raw = @:privateAccess pad.mapping.getRawID(id);
 		var input = @:privateAccess pad.getButton(raw);
 		input.press();
-		if (release)
-			input.release();
 		refresh();
+		if (release)
+		{
+			input.release();
+			refresh();
+		}
 	}
 
 	function pauseMenu():PauseSubState
 	{
 		neutral();
-		var menu = new PauseSubState(() -> {});
-		menu.create();
+		if (gameplay.subState != null)
+		{
+			gameplay.closeSubState();
+			gameplay.resetSubState();
+		}
+		gameplay.ready = true;
+		gameplay.pause();
+		gameplay.resetSubState();
+		var menu:PauseSubState = cast gameplay.subState;
 		// Complete the opening-input release guard before sending a fresh action.
+		neutral();
 		menu.update(0);
 		return menu;
 	}
@@ -118,6 +133,15 @@ class ArcadeTestState extends FlxState
 
 	function runTests():Void
 	{
+		// Exercise the real gameplay parent and callback, without an online API.
+		Game.CurrentLevel = 0;
+		gameplay = new PlayState();
+		@:privateAccess gameplay._constructor = PlayState.new;
+		@:privateAccess FlxG.game._state = gameplay;
+		gameplay.create();
+		FlxG.autoPause = false;
+		FlxG.camera.update(1.1);
+		check("real gameplay initialized", gameplay.ready && gameplay.gameStarted);
 		keyboard(SPACE);
 		check("keyboard jump binding", Actions.jump.triggered);
 		var player = new Player(new PlayState());
@@ -161,14 +185,24 @@ class ArcadeTestState extends FlxState
 		check("gamepad pause navigation", menu.selected == 2);
 		controller(B, true);
 		menu.update(0);
-		check("gamepad Back resumes without choosing title", !menu.ready && @:privateAccess FlxG.game._nextState == null);
+		gameplay.resetSubState();
+		check("gamepad Back closes real pause substate", gameplay.subState == null);
+		check("gamepad Back restores gameplay readiness", gameplay.ready);
+		check("gamepad Back does not request title", @:privateAccess FlxG.game._nextState == null);
+		var beforeSpeed = gameplay.levelSpeed;
+		neutral();
+		gameplay.update(.1);
+		check("gameplay updates after resume", gameplay.levelSpeed > beforeSpeed);
 
 		menu = pauseMenu();
 		keyboard(DOWN, true);
 		menu.update(0);
 		keyboard(ENTER, true);
 		menu.update(0);
-		check("keyboard restart requests state reset", @:privateAccess FlxG.game._nextState != null);
+		var next:FlxState = @:privateAccess FlxG.game._nextState.createInstance();
+		check("keyboard restart targets a fresh PlayState", Std.isOfType(next, PlayState) && next != gameplay);
+		check("keyboard restart preserves current level", Game.CurrentLevel == 0);
+		check("keyboard restart resets gameplay progress", cast(next, PlayState).levelDistance == 0 && !cast(next, PlayState).gameStarted);
 		@:privateAccess FlxG.game._nextState = null;
 
 		menu = pauseMenu();
@@ -179,15 +213,50 @@ class ArcadeTestState extends FlxState
 		}
 		controller(A, true);
 		menu.update(0);
-		check("gamepad main menu requests state change", @:privateAccess FlxG.game._nextState != null);
+		next = @:privateAccess FlxG.game._nextState.createInstance();
+		check("gamepad main menu targets TitleState", Std.isOfType(next, states.TitleState));
 		@:privateAccess FlxG.game._nextState = null;
 
 		var ending = new GameWinState();
 		ending.create();
-		@:privateAccess ending.ready = false;
 		controller(B, true);
 		ending.update(0);
-		check("ending Back works while awaiting a response", @:privateAccess ending.leaving);
+		check("ending Back starts leaving during initial fade", @:privateAccess ending.leaving);
+		FlxG.camera.update(.3);
+		next = @:privateAccess FlxG.game._nextState.createInstance();
+		check("ending Back reaches title despite initial fade", Std.isOfType(next, states.TitleState));
+		@:privateAccess FlxG.game._nextState = null;
+
+		FlxG.camera.stopFX();
+		ending = new GameWinState();
+		ending.create();
+		FlxG.camera.update(.6);
+		@:privateAccess ending.submit();
+		check("score submission awaits stub callback", axollib.AxolAPI.scoreCallback != null);
+		controller(B, true);
+		ending.update(0);
+		FlxG.camera.update(.3);
+		next = @:privateAccess FlxG.game._nextState.createInstance();
+		check("ending Back reaches title while API is pending", Std.isOfType(next, states.TitleState));
+		@:privateAccess FlxG.game._nextState = null;
+		axollib.AxolAPI.deliverScore({data: {scores: {scores: [], lastId: "0"}}});
+		check("late score response cannot open leaderboard after Back", @:privateAccess ending._requestedSubState == null);
+
+		for (response in [null, {data: {scores: {}}}])
+		{
+			FlxG.camera.stopFX();
+			ending = new GameWinState();
+			ending.create();
+			FlxG.camera.update(.6);
+			@:privateAccess ending.submit();
+			axollib.AxolAPI.deliverScore(response);
+			FlxG.camera.update(.3);
+			check("invalid score response leaves ending safely", @:privateAccess FlxG.game._nextState != null);
+			@:privateAccess FlxG.game._nextState = null;
+		}
+		var leaderboard = new states.GameWinState.HiScoreState({data: {scores: {scores: [], lastId: "0"}}});
+		leaderboard.create();
+		check("empty leaderboard renders without exception", true);
 
 		menu = pauseMenu();
 		var keyboardExit = Sys.getEnv("FRESNO_EXIT_MODE") == "keyboard";
