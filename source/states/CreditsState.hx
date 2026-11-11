@@ -92,7 +92,7 @@ class CreditsState extends FlxState
 			ready = false;
 			FlxG.camera.fade(Game.OUR_BLACK, .5, false, function()
 			{
-				FlxG.switchState(new TitleState());
+				FlxG.switchState(TitleState.new);
 			});
 		}
 	}

@@ -9,6 +9,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.text.FlxBitmapText;
 import ui.Frame;
+import ui.NormalText;
 import flixel.FlxSubState;
 import flixel.input.actions.FlxActionInput;
 import objects.IAnimal;
@@ -224,7 +225,7 @@ class PlayState extends FlxState
 	{
 		FlxG.camera.fade(Game.OUR_BLACK, 1, false, () ->
 		{
-			// FlxG.switchState(new PlayState());
+			// FlxG.switchState(PlayState.new);
 			AxolAPI.sendEvent('Died on level ${Game.CurrentLevel + 1}');
 			FlxG.resetState();
 		});
@@ -372,7 +373,7 @@ class PlayState extends FlxState
 							NGAPI.postPlayerHiscore("Total Scores", Game.Scores.get(0) + Game.Scores.get(1) + Game.Scores.get(2), (_) ->
 							{
 								AxolAPI.sendEvent('Game Won!');
-								FlxG.switchState(new GameWinState());
+								FlxG.switchState(GameWinState.new);
 							});
 						}
 						else
@@ -380,7 +381,7 @@ class PlayState extends FlxState
 							Game.CurrentLevel++;
 							AxolAPI.sendEvent('Cleared Level ${Game.CurrentLevel + 1}');
 
-							FlxG.switchState(new PlayState());
+							FlxG.switchState(PlayState.new);
 						}
 					}
 					#else
@@ -389,13 +390,13 @@ class PlayState extends FlxState
 						Game.CurrentLevel++;
 						AxolAPI.sendEvent('Cleared Level ${Game.CurrentLevel + 1}');
 
-						FlxG.switchState(new PlayState());
+						FlxG.switchState(PlayState.new);
 					}
 					else
 					{
 						// game win!?
 						AxolAPI.sendEvent('Game Won!');
-						FlxG.switchState(new GameWinState());
+						FlxG.switchState(GameWinState.new);
 					}
 					#end
 				});
@@ -567,8 +568,12 @@ class PlayState extends FlxState
 class PauseSubState extends FlxSubState
 {
 	public var ready:Bool = false;
-
-	var cb:Void->Void;
+	public var selected(default, null):Int = 0;
+	public var options(default, null):Array<String> = ["Resume", "Restart Level", "Main Menu"];
+	private var labels:Array<NormalText> = [];
+	private var selector:FlxSprite;
+	private var waitingForRelease:Bool = true;
+	private var cb:Void->Void;
 
 	public function new(CB:Void->Void):Void
 	{
@@ -578,27 +583,44 @@ class PauseSubState extends FlxSubState
 
 	override public function create():Void
 	{
-		bgColor = 0x663a3a50;
-
+		bgColor = 0x993a3a50;
 		closeCallback = cb;
-
-		var pauseText:FlxBitmapText = new FlxBitmapText(FlxBitmapFont.fromAngelCode("assets/images/fat_text.png", "assets/images/fat_text.xml"));
-		pauseText.text = "* P A U S E D *";
-		pauseText.screenCenter();
-		pauseText.scrollFactor.set();
-
-		var frame:Frame = new Frame(pauseText.width + 32, pauseText.height + 32);
+		#if desktop
+		options.push("Quit to Launcher");
+		#end
+		var widest:Float = 0;
+		for (option in options)
+		{
+			var label = new NormalText(option);
+			label.scrollFactor.set();
+			labels.push(label);
+			widest = Math.max(widest, label.width);
+		}
+		var rowHeight = labels[0].height + 6;
+		var frame = new Frame(widest + 40, rowHeight * options.length + 20);
 		frame.screenCenter();
 		frame.scrollFactor.set();
-
 		add(frame);
-		add(pauseText);
-
-		FlxG.camera.flash(FlxColor.WHITE, .2, () ->
+		for (i in 0...labels.length)
 		{
-			ready = true;
-		});
+			var label = labels[i];
+			label.color = Game.OUR_BLACK;
+			label.x = frame.x + 24;
+			label.y = frame.y + 10 + rowHeight * i;
+			add(label);
+		}
+		selector = new FlxSprite("assets/images/selector.png");
+		selector.scrollFactor.set();
+		selector.x = frame.x + 8;
+		add(selector);
+		refreshSelector();
+		ready = true;
 		super.create();
+	}
+
+	private function refreshSelector():Void
+	{
+		selector.y = labels[selected].y + (labels[selected].height - selector.height) / 2;
 	}
 
 	override public function update(elapsed:Float):Void
@@ -606,13 +628,51 @@ class PauseSubState extends FlxSubState
 		super.update(elapsed);
 		if (!ready)
 			return;
-		if (Actions.pause.triggered)
+		// Ignore the release that belongs to the press which opened this menu.
+		if (waitingForRelease)
+		{
+			if (!Actions.pauseHeld.triggered)
+				waitingForRelease = false;
+			return;
+		}
+		if (Actions.backUI.triggered || Actions.pause.triggered)
 		{
 			ready = false;
-			FlxG.camera.flash(FlxColor.WHITE, .2, () ->
-			{
+			close();
+		}
+		else if (Actions.upUI.triggered && !Actions.downUI.triggered)
+		{
+			selected = (selected + options.length - 1) % options.length;
+			refreshSelector();
+		}
+		else if (Actions.downUI.triggered && !Actions.upUI.triggered)
+		{
+			selected = (selected + 1) % options.length;
+			refreshSelector();
+		}
+		else if (Actions.pressUI.triggered)
+			activateSelected();
+	}
+
+	private function activateSelected():Void
+	{
+		ready = false;
+		switch (selected)
+		{
+			case 0:
 				close();
-			});
+			case 1:
+				closeCallback = null;
+				FlxG.resetState();
+			case 2:
+				closeCallback = null;
+				Sound.fadeOutMusic(.15);
+				FlxG.switchState(TitleState.new);
+			#if desktop
+			case 3:
+				closeCallback = null;
+				openfl.system.System.exit(0);
+			#end
 		}
 	}
 

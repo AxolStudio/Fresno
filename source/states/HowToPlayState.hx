@@ -88,7 +88,7 @@ class HowToPlayState extends FlxState
 			ready = false;
 			FlxG.camera.fade(Game.OUR_BLACK, .5, false, () ->
 			{
-				FlxG.switchState(new TitleState());
+				FlxG.switchState(TitleState.new);
 			});
 		}
 	}

@@ -62,7 +62,7 @@ class TitleState extends FlxState
 
 		add(pressAnyKey = new FlxBitmapText(FlxBitmapFont.fromAngelCode("assets/images/fat_text.png", "assets/images/fat_text.xml")));
 		pressAnyKey.alignment = FlxTextAlign.CENTER;
-		pressAnyKey.text = "Press Any Key";
+		pressAnyKey.text = "Press Any Key or Button";
 		pressAnyKey.screenCenter(FlxAxes.X);
 		pressAnyKey.y = FlxG.height;
 		pressAnyKey.alpha = 0;
@@ -125,7 +125,7 @@ class TitleState extends FlxState
 					// FlxG.camera.fade(Game.OUR_BLACK, .5, true, () ->
 					// {
 					// 	Game.CurrentLevel = 0;
-					// 	FlxG.switchState(new PlayState());
+					// 	FlxG.switchState(PlayState.new);
 					// });
 				});
 			}
@@ -242,7 +242,7 @@ class Menu extends FlxSubState
 				selected = 0;
 			selector.y = options[selected].y + (options[selected].height - selector.height) / 2;
 		}
-		else if (Actions.any.triggered)
+		else if (Actions.pressUI.triggered)
 		{
 			ready = false;
 			FlxG.camera.fade(Game.OUR_BLACK, .5, false, () ->
@@ -252,10 +252,11 @@ class Menu extends FlxSubState
 					case 0:
 						Sound.fadeOutMusic(.5);
 						Game.CurrentLevel = 0;
-						FlxG.switchState(new PlayState());
+						Game.resetScores();
+						FlxG.switchState(PlayState.new);
 
 					case 1:
-						FlxG.switchState(new HowToPlayState());
+						FlxG.switchState(HowToPlayState.new);
 					case 2:
 						#if debug
 						Game.Scores = [0 => 100, 1 => 200, 2 => 300];
@@ -263,12 +264,12 @@ class Menu extends FlxSubState
 						NGAPI.postPlayerHiscore("Total Scores", Game.Scores.get(0) + Game.Scores.get(1) + Game.Scores.get(2), (_) ->
 						{
 						#end
-							FlxG.switchState(new GameWinState());
+							FlxG.switchState(GameWinState.new);
 						#if (html5 && ng)
 						});
 						#end
 						#else
-						FlxG.switchState(new CreditsState());
+						FlxG.switchState(CreditsState.new);
 						#end
 					#if desktop
 					case 3:

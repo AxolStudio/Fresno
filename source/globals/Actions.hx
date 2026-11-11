@@ -23,6 +23,8 @@ class Actions
 	public static var pressUI:FlxActionDigital;
 	public static var pressUIPress:FlxActionDigital;
 	public static var pause:FlxActionDigital;
+	public static var pauseHeld:FlxActionDigital;
+	public static var backUI:FlxActionDigital;
 	public static var any:FlxActionDigital;
 
 	public static var leftStick:FlxActionAnalog;
@@ -45,13 +47,15 @@ class Actions
 		Actions.pressUI = new FlxActionDigital();
 		Actions.pressUIPress = new FlxActionDigital();
 		Actions.pause = new FlxActionDigital();
+		Actions.pauseHeld = new FlxActionDigital();
+		Actions.backUI = new FlxActionDigital();
 		Actions.any = new FlxActionDigital();
 
 		Actions.leftStick = new FlxActionAnalog();
 
 		var gameSet:FlxActionSet = new FlxActionSet("GameControls", [
 			Actions.up, Actions.down, Actions.jump, Actions.pause, Actions.upUI, Actions.downUI, Actions.leftUI, Actions.rightUI, Actions.pressUI,
-			Actions.pressUIPress, Actions.any
+			Actions.pressUIPress, Actions.any, Actions.pauseHeld, Actions.backUI
 		], [Actions.leftStick]);
 
 		gameIndex = Actions.actions.addSet(gameSet);
@@ -63,14 +67,24 @@ class Actions
 
 		Actions.jump.addKey(SPACE, PRESSED);
 		Actions.jump.addKey(X, PRESSED);
+		Actions.jump.addGamepad(A, PRESSED);
+		Actions.jump.addGamepad(X, PRESSED);
 
 		Actions.pause.addKey(P, JUST_PRESSED);
 		Actions.pause.addKey(ESCAPE, JUST_PRESSED);
 
 		Actions.up.addGamepad(DPAD_UP, PRESSED);
 		Actions.down.addGamepad(DPAD_DOWN, PRESSED);
+		Actions.up.addGamepad(LEFT_STICK_DIGITAL_UP, PRESSED);
+		Actions.down.addGamepad(LEFT_STICK_DIGITAL_DOWN, PRESSED);
 
 		Actions.pause.addGamepad(START, JUST_PRESSED);
+		Actions.pauseHeld.addKey(P, PRESSED);
+		Actions.pauseHeld.addKey(ESCAPE, PRESSED);
+		Actions.pauseHeld.addGamepad(START, PRESSED);
+		Actions.backUI.addKey(ESCAPE, JUST_RELEASED);
+		Actions.backUI.addKey(BACKSPACE, JUST_RELEASED);
+		Actions.backUI.addGamepad(B, JUST_RELEASED);
 
 		Actions.upUI.addKey(UP, JUST_RELEASED);
 		Actions.upUI.addKey(W, JUST_RELEASED);
@@ -92,15 +106,13 @@ class Actions
 		Actions.downUI.addGamepad(DPAD_DOWN, JUST_RELEASED);
 		Actions.leftUI.addGamepad(DPAD_LEFT, JUST_RELEASED);
 		Actions.rightUI.addGamepad(DPAD_RIGHT, JUST_RELEASED);
+		Actions.upUI.addGamepad(LEFT_STICK_DIGITAL_UP, JUST_RELEASED);
+		Actions.downUI.addGamepad(LEFT_STICK_DIGITAL_DOWN, JUST_RELEASED);
+		Actions.leftUI.addGamepad(LEFT_STICK_DIGITAL_LEFT, JUST_RELEASED);
+		Actions.rightUI.addGamepad(LEFT_STICK_DIGITAL_RIGHT, JUST_RELEASED);
 		Actions.pressUI.addGamepad(A, JUST_RELEASED);
-		Actions.pressUI.addGamepad(B, JUST_RELEASED);
-		Actions.pressUI.addGamepad(X, JUST_RELEASED);
-		Actions.pressUI.addGamepad(Y, JUST_RELEASED);
 		Actions.pressUI.addGamepad(START, JUST_RELEASED);
 		Actions.pressUIPress.addGamepad(A, PRESSED);
-		Actions.pressUIPress.addGamepad(B, PRESSED);
-		Actions.pressUIPress.addGamepad(X, PRESSED);
-		Actions.pressUIPress.addGamepad(Y, PRESSED);
 		Actions.pressUIPress.addGamepad(START, PRESSED);
 
 		Actions.leftStick.addGamepad(LEFT_ANALOG_STICK, MOVED, EITHER);

@@ -4,7 +4,7 @@ import flixel.FlxObject;
 import flixel.tweens.FlxTween;
 import flixel.FlxG;
 import flixel.math.FlxMath;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import lime.utils.AssetType;
 import lime.utils.Assets;
 

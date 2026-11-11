@@ -45,6 +45,7 @@ class GameWinState extends FlxState
 	#end
 	private var ready:Bool = false;
 	private var scoresShown:Bool = false;
+	private var leaving:Bool = false;
 	private var timer:FlxTimer;
 
 	private var title:FlxBitmapText;
@@ -66,7 +67,7 @@ class GameWinState extends FlxState
 		
 		// get the current hiscores
 
-		title = new FlxBitmapText(FlxBitmapFont.fromAngelCode("assets/images/fat_text.png", "assets/image/fat_text.xml"));
+		title = new FlxBitmapText(FlxBitmapFont.fromAngelCode("assets/images/fat_text.png", "assets/images/fat_text.xml"));
 		title.text = "You Win!";
 		title.alpha = 0;
 
@@ -234,6 +235,11 @@ class GameWinState extends FlxState
 	{
 		super.update(elapsed);
 
+		if (!leaving && Actions.backUI.triggered)
+		{
+			leaveEnding();
+			return;
+		}
 		if (!ready)
 			return;
 		if (!scoresShown)
@@ -252,7 +258,7 @@ class GameWinState extends FlxState
 				ready = false;
 				FlxG.camera.fade(Game.OUR_BLACK, .5, false, () ->
 				{
-					FlxG.switchState(new TitleState());
+					FlxG.switchState(TitleState.new);
 				});
 			}
 			#else
@@ -260,7 +266,7 @@ class GameWinState extends FlxState
 			var right:Bool = Actions.rightUI.triggered;
 			var up:Bool = Actions.upUI.triggered;
 			var down:Bool = Actions.downUI.triggered;
-			var any:Bool = Actions.any.triggered;
+			var any:Bool = Actions.pressUI.triggered;
 
 			if (left && right)
 				left = right = false;
@@ -297,6 +303,17 @@ class GameWinState extends FlxState
 			#end
 		}
 	}
+	private function leaveEnding():Void
+	{
+		leaving = true;
+		ready = false;
+		if (timer != null)
+			timer.cancel();
+		FlxG.camera.fade(Game.OUR_BLACK, .25, false, () ->
+		{
+			FlxG.switchState(TitleState.new);
+		});
+	}
 	#if !(html5 && ng)
 	private function changeLetter(Amount:Int):Void
 	{
@@ -322,6 +339,13 @@ class GameWinState extends FlxState
 
 	private function scoreSent(Msg:Object):Void
 	{
+		if (leaving)
+			return;
+		if (Msg == null || Msg.data == null || Msg.data.scores == null)
+		{
+			leaveEnding();
+			return;
+		}
 		FlxTween.tween(this, {alpha: 0}, .5, {
 			onComplete: (_) ->
 			{
@@ -422,7 +446,7 @@ class HiScoreState extends FlxSubState
 	{
 		FlxG.camera.pixelPerfectRender = true;
 
-		title = new FlxBitmapText(FlxBitmapFont.fromAngelCode("assets/images/fat_text.png", "assets/image/fat_text.xml"));
+		title = new FlxBitmapText(FlxBitmapFont.fromAngelCode("assets/images/fat_text.png", "assets/images/fat_text.xml"));
 		title.text = "Hi-Scores";
 		title.screenCenter(FlxAxes.X);
 		title.alpha = 0;
@@ -549,7 +573,7 @@ class HiScoreState extends FlxSubState
 			ready = false;
 			FlxG.camera.fade(Game.OUR_BLACK, .5, false, () ->
 			{
-				FlxG.switchState(new TitleState());
+				FlxG.switchState(TitleState.new);
 			});
 		}
 	}

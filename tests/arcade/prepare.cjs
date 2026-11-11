@@ -1,0 +1,13 @@
+const fs = require('fs');
+const path = require('path');
+const root = path.resolve(__dirname, '../..');
+let xml = fs.readFileSync(path.join(root, 'Project.xml'), 'utf8');
+xml = xml.replace('main="Main"', 'main="ArcadeRegression"').replace('file="fresno"', 'file="fresno-arcade-regression"');
+xml = xml.replace('company="Axol Studio, LLC"', 'company="Fresno Automated Tests"');
+xml = xml.replace('<source path="source" />', '<source path="../../source" /><source path="source" />');
+xml = xml.replace('<assets path="assets" embed="true"/>', '<assets path="../../assets" rename="assets" embed="true"/>');
+xml = xml.replace('<include path="axollib/include.xml" />', '<include path="../../axollib/include.xml" />');
+xml = xml.replace(/path="assets\/icons\//g, 'path="../../assets/icons/');
+xml = xml.replace('<project xmlns=', '<project xmlns=');
+fs.writeFileSync(path.join(__dirname, 'Project.xml'), xml);
+console.log('Created isolated native test project. Test-only AxolAPI prevents analytics/network writes.');
