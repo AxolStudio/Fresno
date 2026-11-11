@@ -63,11 +63,11 @@ class GameWinState extends FlxState
 
 	override public function create():Void
 	{
-		add(new FlxSprite("assets/images/ending.png"));
+		add(new FlxSprite(0, 0, "assets/images/ending.png"));
 		
 		// get the current hiscores
 
-		title = new FlxBitmapText(FlxBitmapFont.fromAngelCode("assets/images/fat_text.png", "assets/images/fat_text.xml"));
+		title = new FlxBitmapText(0, 0, "", FlxBitmapFont.fromAngelCode("assets/images/fat_text.png", "assets/images/fat_text.xml"));
 		title.text = "You Win!";
 		title.alpha = 0;
 
@@ -141,7 +141,7 @@ class GameWinState extends FlxState
 
 		frameHeight += submitScoreMsg.height + 4 + 4 + inits[0].height + 4;
 
-		end = new FlxSprite("assets/images/end.png");
+		end = new FlxSprite(0, 0, "assets/images/end.png");
 		end.alpha = 0;
 		#end
 
@@ -447,7 +447,7 @@ class HiScoreState extends FlxSubState
 	{
 		FlxG.camera.pixelPerfectRender = true;
 
-		title = new FlxBitmapText(FlxBitmapFont.fromAngelCode("assets/images/fat_text.png", "assets/images/fat_text.xml"));
+		title = new FlxBitmapText(0, 0, "", FlxBitmapFont.fromAngelCode("assets/images/fat_text.png", "assets/images/fat_text.xml"));
 		title.text = "Hi-Scores";
 		title.screenCenter(FlxAxes.X);
 		title.alpha = 0;

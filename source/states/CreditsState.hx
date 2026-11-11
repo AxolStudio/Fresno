@@ -28,7 +28,7 @@ class CreditsState extends FlxState
 		t.y = 4;
 		add(t);
 
-		var logo:FlxSprite = new FlxSprite("assets/images/axol-logo-64px.png");
+		var logo:FlxSprite = new FlxSprite(0, 0, "assets/images/axol-logo-64px.png");
 		logo.screenCenter(FlxAxes.X);
 		logo.y = t.height + t.y + 4;
 		// logo.y = 2;

@@ -60,7 +60,7 @@ class TitleState extends FlxState
 
 		title.alpha = 0;
 
-		add(pressAnyKey = new FlxBitmapText(FlxBitmapFont.fromAngelCode("assets/images/fat_text.png", "assets/images/fat_text.xml")));
+		add(pressAnyKey = new FlxBitmapText(0, 0, "", FlxBitmapFont.fromAngelCode("assets/images/fat_text.png", "assets/images/fat_text.xml")));
 		pressAnyKey.alignment = FlxTextAlign.CENTER;
 		pressAnyKey.text = "Press Any Key or Button";
 		pressAnyKey.screenCenter(FlxAxes.X);
@@ -175,7 +175,7 @@ class Menu extends FlxSubState
 		options.push(opt);
 		#end
 
-		selector = new FlxSprite("assets/images/selector.png");
+		selector = new FlxSprite(0, 0, "assets/images/selector.png");
 
 		for (o in options)
 		{

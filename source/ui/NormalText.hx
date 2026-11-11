@@ -7,7 +7,7 @@ class NormalText extends FlxBitmapText
 {
 	public function new(?Text:String = ""):Void
 	{
-		super(Game.NormalFont);
+		super(0, 0, "", Game.NormalFont);
 		text = Text;
 	}
 }

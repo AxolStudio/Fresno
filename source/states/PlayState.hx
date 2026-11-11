@@ -609,7 +609,7 @@ class PauseSubState extends FlxSubState
 			label.y = frame.y + 10 + rowHeight * i;
 			add(label);
 		}
-		selector = new FlxSprite("assets/images/selector.png");
+		selector = new FlxSprite(0, 0, "assets/images/selector.png");
 		selector.scrollFactor.set();
 		selector.x = frame.x + 8;
 		add(selector);

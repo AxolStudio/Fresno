@@ -8,7 +8,7 @@ class Shadow extends FlxSprite
 
 	public function new():Void
 	{
-		super("assets/images/shadow.png");
+		super(0, 0, "assets/images/shadow.png");
 		alpha = 0.33;
 		blend = MULTIPLY;
 	}

@@ -32,7 +32,7 @@ class HowToPlayState extends FlxState
 		bgColor = FlxColor.TRANSPARENT;
 		FlxG.autoPause = false;
 
-		var frame:FlxSprite = new FlxSprite("assets/images/how-to-back.png");
+		var frame:FlxSprite = new FlxSprite(0, 0, "assets/images/how-to-back.png");
 
 		add(frame);
 
@@ -47,12 +47,12 @@ class HowToPlayState extends FlxState
 		// inner.y = text.y + text.height - 2;
 		// add(inner);
 
-		var controller:FlxSprite = new FlxSprite("assets/images/controller.png");
+		var controller:FlxSprite = new FlxSprite(0, 0, "assets/images/controller.png");
 		controller.x = frame.x + 6 + ((frame.width - 12) / 4) - (controller.width / 2);
 		controller.y = text.y + text.height - 2 + (126 / 2) - (controller.height / 2);
 		add(controller);
 
-		var keyboard:FlxSprite = new FlxSprite("assets/images/kb_controls.png");
+		var keyboard:FlxSprite = new FlxSprite(0, 0, "assets/images/kb_controls.png");
 		keyboard.x = frame.x + 6 + ((frame.width - 12) / 4) * 3 - (keyboard.width / 2);
 		keyboard.y = text.y + text.height - 2 + (126 / 2) - (keyboard.height / 2);
 		add(keyboard);

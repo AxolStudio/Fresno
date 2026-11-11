@@ -59,12 +59,12 @@ class HUD extends FlxGroup
 
 		starPos = FlxPoint.get(stars[4].x, stars[4].y);
 
-		add(meter = new FlxSprite("assets/images/meter.png"));
+		add(meter = new FlxSprite(0, 0, "assets/images/meter.png"));
 		meter.y = 8;
 		meter.screenCenter(FlxAxes.X);
 		meter.scrollFactor.set();
 
-		add(flag = new FlxSprite("assets/images/flag.png"));
+		add(flag = new FlxSprite(0, 0, "assets/images/flag.png"));
 		flag.y = meter.y + (meter.height / 2) - flag.height;
 		flag.x = meter.x + (meter.width) - 10;
 		flag.scrollFactor.set();
@@ -72,12 +72,12 @@ class HUD extends FlxGroup
 		posStart = meter.x + 8;
 		posEnd = meter.x + (meter.width) - 8;
 
-		add(position = new FlxSprite("assets/images/position.png"));
+		add(position = new FlxSprite(0, 0, "assets/images/position.png"));
 		position.y = meter.y + (meter.height / 2) - position.height;
 		position.x = posStart - (position.width / 2);
 		position.scrollFactor.set();
 
-		add(score = new FlxBitmapText(FlxBitmapFont.fromAngelCode("assets/images/fat_numbers.png", "assets/images/fat_numbers.xml")));
+		add(score = new FlxBitmapText(0, 0, "", FlxBitmapFont.fromAngelCode("assets/images/fat_numbers.png", "assets/images/fat_numbers.xml")));
 		score.autoSize = false;
 		score.fieldWidth = 80;
 		score.y = 2;
@@ -86,7 +86,7 @@ class HUD extends FlxGroup
 		score.text = "0";
 		score.scrollFactor.set();
 
-		add(combo = new FlxBitmapText(FlxBitmapFont.fromAngelCode("assets/images/small_fat_numbers.png", "assets/images/small_fat_numbers.xml")));
+		add(combo = new FlxBitmapText(0, 0, "", FlxBitmapFont.fromAngelCode("assets/images/small_fat_numbers.png", "assets/images/small_fat_numbers.xml")));
 		combo.autoSize = false;
 		combo.fieldWidth = 80;
 		combo.y = score.y + score.height + 2;
