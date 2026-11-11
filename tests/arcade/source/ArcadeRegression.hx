@@ -38,6 +38,9 @@ class ArcadeTestState extends FlxState
 	{
 		super.create();
 		FlxG.autoPause = false;
+		// Compile-time guard: never initialize the real analytics API in tests.
+		if (!axollib.AxolAPI.testMode)
+			throw "Tests require the no-network AxolAPI stub";
 		Game.initializeGame();
 		pad = @:privateAccess FlxG.gamepads.createByID(0, XINPUT);
 	}

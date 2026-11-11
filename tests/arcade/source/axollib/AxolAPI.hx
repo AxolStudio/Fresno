@@ -2,6 +2,7 @@ package axollib;
 import flixel.FlxState;
 class AxolAPI
 {
+	public static inline var testMode:Bool = true;
 	public static var firstState:Class<FlxState>;
 	public static var init:Void->Void;
 	public static function initialize(game:String = "", player:String = ""):Void {}

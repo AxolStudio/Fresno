@@ -62,8 +62,8 @@
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
-	<haxelib name="flixel" />
-	<haxelib name="flixel-addons" />
+	<haxelib name="flixel" version="6.2.1" />
+	<haxelib name="flixel-addons" version="4.0.2" />
 
 
 	<include path="axollib/include.xml" />
