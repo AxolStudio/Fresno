@@ -125,11 +125,11 @@ private class FresnoSmokeDriver extends FlxBasic {
     case 8:
      if(play().player.jumpingHeight>0){pass("device jump raises live player");phase=9;}
     case 9:
-     if(play().player.jumpingHeight==0&&!Actions.jump.triggered){pass("released jump returns player to ground");pulse(P,START);phase=10;}
+     if(play().player.jumpingHeight==0&&!Actions.jump.triggered){pass("released jump returns player to ground");pulse(P,START);holdFrames=5;phase=10;}
     case 10:
      if(pause()!=null&&ready(pause())){require(pause().selected==0,"pause defaults Resume");pass("pause opens by device");distance=play().levelDistance;settle=10;phase=11;}
     case 11:
-     require(play().levelDistance==distance,"pause freezes actual parent progression");pulse(ESCAPE,B);phase=12;
+     require(play().levelDistance==distance,"pause freezes actual parent progression");pass("opening pause hold and release do not auto-resume");pulse(ESCAPE,B);phase=12;
     case 12:
      if(idle()&&play().levelDistance>distance){pass("Back closes pause and resumes real progression");oldPlay=play();startLevel=Game.CurrentLevel;pulse(P,START);phase=13;}
     case 13:choosePause(1,14);
