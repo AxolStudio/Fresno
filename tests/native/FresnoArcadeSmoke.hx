@@ -103,6 +103,10 @@ private class FresnoSmokeDriver extends FlxBasic {
    }
    if(haxe.Timer.stamp()-started>285||haxe.Timer.stamp()-phaseStarted>45)throw "smoke timeout phase "+phase;
    if(held){if(holdFrames-->0)return;release();return;}
+   if(phase==11){
+    require(pause()!=null,"opening pause input must not auto-resume on release");
+    require(play().levelDistance==distance,"pause freezes actual parent progression");
+   }
    if(settle-->0)return;
    switch(phase){
     case 0:chooseTitle(1,1);
@@ -185,6 +189,10 @@ private class FresnoSmokeDriver extends FlxBasic {
  }
  function write(passed:Bool,exitRequested:Bool,error:Null<String>):Void {
   sys.io.File.saveContent(output,haxe.Json.stringify({schema:1,mode:"real-loop-smoke",device:device,passed:passed,exitRequested:exitRequested,error:error,checks:checks,
+   finalState:{phase:phase,state:Type.getClassName(Type.getClass(FlxG.state)),
+    modal:modal()==null?"none":Type.getClassName(Type.getClass(modal())),
+    distance:play()==null?null:play().levelDistance,pausedDistance:distance,
+    accept:Actions.pressUI.triggered,pause:Actions.pause.triggered,pauseHeld:Actions.pauseHeld.triggered,held:held},
    notVerified:["physical controller and hotplug","cabinet focus","live network services","full gameplay completion; fatal damage and ending are explicitly fixture-seeded"]},null,"  "));
  }
  public function fail(error:String):Void {done=true;write(false,false,error);Sys.exit(1);}
