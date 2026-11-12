@@ -10,4 +10,11 @@ class NormalText extends FlxBitmapText
 		super(0, 0, "", Game.NormalFont);
 		text = Text;
 	}
+    #if desktop
+    // Refresh line widths before the fixed-width alignment path reads them.
+    override public function computeTextSize():Void {
+        var measuredWidth=textWidth;
+        super.computeTextSize();
+    }
+    #end
 }

@@ -1,7 +1,9 @@
 package;
 
 import openfl.Lib;
+#if !desktop
 import axollib.DissolveState;
+#end
 import states.TitleState;
 import axollib.AxolAPI;
 import globals.Game;
@@ -15,6 +17,7 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
+		#if !desktop
 		AxolAPI.firstState = TitleState;
 		AxolAPI.init = Game.initializeGame;
 
@@ -32,6 +35,15 @@ class Main extends Sprite
 		#end
 
 		addChild(new FlxGame(320, 180, DissolveState, 60, 60, true, startFull));
+
+		#else
+		Lib.application.window.onClose.add(() -> {
+			#if !arcade_regression
+			desktop.DesktopOnline.sendEvent("GameExited");
+			#end
+		});
+		addChild(new FlxGame(320, 180, desktop.DesktopBoot, 60, 60, true, true));
+		#end
 
 		FlxG.scaleMode = new PixelPerfectScaleMode();
 	}

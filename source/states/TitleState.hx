@@ -23,6 +23,10 @@ import flixel.FlxState;
 
 class TitleState extends FlxState
 {
+    #if desktop
+    public var desktopGate=new desktop.DesktopGate();
+    override public function openSubState(state:flixel.FlxSubState):Void {desktopGate.reset();super.openSubState(state);}
+    #end
 	private var moon:FlxSprite;
 	private var title:FlxSprite;
 
@@ -107,6 +111,9 @@ class TitleState extends FlxState
 
 		if (ready)
 		{
+            #if desktop
+            if(subState!=null||!desktop.DesktopControls.allow(desktopGate))return;
+            #end
 			if (Actions.any.triggered)
 			{
 				ready = false;
@@ -135,6 +142,10 @@ class TitleState extends FlxState
 
 class Menu extends FlxSubState
 {
+    #if desktop
+    public var desktopGate=new desktop.DesktopGate();
+    override public function openSubState(state:flixel.FlxSubState):Void {desktopGate.reset();super.openSubState(state);}
+    #end
 	private var frame:Frame;
 
 	private var options:Array<NormalText>;
@@ -215,6 +226,9 @@ class Menu extends FlxSubState
 	function set_alpha(Value:Float):Float
 	{
 		alpha = FlxMath.bound(Value, 0, 1);
+        #if desktop
+        if(frame==null||selector==null||options==null)return alpha;
+        #end
 		frame.alpha = selector.alpha = alpha;
 		for (o in options)
 			o.alpha = alpha;
@@ -227,6 +241,9 @@ class Menu extends FlxSubState
 
 		if (!ready)
 			return;
+        #if desktop
+        if(subState!=null||!desktop.DesktopControls.allow(desktopGate))return;
+        #end
 
 		if (Actions.upUI.triggered && !Actions.downUI.triggered)
 		{
@@ -244,6 +261,9 @@ class Menu extends FlxSubState
 		}
 		else if (Actions.pressUI.triggered)
 		{
+            #if desktop
+            if(selected==3){openSubState(new desktop.DesktopExit());return;}
+            #end
 			ready = false;
 			FlxG.camera.fade(Game.OUR_BLACK, .5, false, () ->
 			{
@@ -258,7 +278,7 @@ class Menu extends FlxSubState
 					case 1:
 						FlxG.switchState(HowToPlayState.new);
 					case 2:
-						#if debug
+						#if (debug && !desktop)
 						Game.Scores = [0 => 100, 1 => 200, 2 => 300];
 						#if (html5 && ng)
 						NGAPI.postPlayerHiscore("Total Scores", Game.Scores.get(0) + Game.Scores.get(1) + Game.Scores.get(2), (_) ->
@@ -273,7 +293,7 @@ class Menu extends FlxSubState
 						#end
 					#if desktop
 					case 3:
-						openfl.system.System.exit(0);
+						openSubState(new desktop.DesktopExit());
 					#end
 				}
 			});

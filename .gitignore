@@ -7,3 +7,11 @@ dump/decoding_error.txt
 data_output
 haxe_libraries
 dump
+# Isolated hosted validation only
+.haxelib/
+ci-dependency/
+deliverables/
+diagnostics/
+candidate/
+ArcadeTest.xml
+__pycache__/

@@ -18,6 +18,10 @@ import flixel.FlxSubState;
 
 class HowToPlayState extends FlxState
 {
+    #if desktop
+    public var desktopGate=new desktop.DesktopGate();
+    override public function openSubState(state:flixel.FlxSubState):Void {desktopGate.reset();super.openSubState(state);}
+    #end
 	public var ready:Bool = false;
 
 	public function new()
@@ -82,6 +86,9 @@ class HowToPlayState extends FlxState
 
 		if (!ready)
 			return;
+        #if desktop
+        if(subState!=null||!desktop.DesktopControls.allow(desktopGate))return;
+        #end
 
 		if (Actions.any.triggered)
 		{

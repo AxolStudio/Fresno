@@ -41,6 +41,10 @@ import globals.NGAPI;
 
 class PlayState extends FlxState
 {
+    #if desktop
+    public var desktopGate=new desktop.DesktopGate();
+    override public function openSubState(state:flixel.FlxSubState):Void {desktopGate.reset();super.openSubState(state);}
+    #end
 	public var levelTheme:globals.Game.Theme;
 
 	public var lyrBackground:FlxTypedGroup<FlxSprite>; // background repeating images
@@ -163,7 +167,15 @@ class PlayState extends FlxState
 			// player.giveSkateboard();
 		});
 
+#if desktop
+{
+#if !arcade_regression
+		desktop.DesktopOnline.sendEvent('Started Level ${Game.CurrentLevel + 1}');
+#end
+}
+#else
 		AxolAPI.sendEvent('Started Level ${Game.CurrentLevel + 1}');
+#end
 
 		super.create();
 	}
@@ -173,13 +185,29 @@ class PlayState extends FlxState
 		if (!ready)
 			return;
 		ready = false;
+#if desktop
+{
+#if !arcade_regression
+		desktop.DesktopOnline.sendEvent('Paused');
+#end
+}
+#else
 		AxolAPI.sendEvent('Paused');
+#end
 		openSubState(new PauseSubState(returnFromPause));
 	}
 
 	private function returnFromPause():Void
 	{
+#if desktop
+{
+#if !arcade_regression
+		desktop.DesktopOnline.sendEvent('Resumed');
+#end
+}
+#else
 		AxolAPI.sendEvent('Resumed');
+#end
 		ready = true;
 	}
 
@@ -226,7 +254,15 @@ class PlayState extends FlxState
 		FlxG.camera.fade(Game.OUR_BLACK, 1, false, () ->
 		{
 			// FlxG.switchState(PlayState.new);
+#if desktop
+{
+#if !arcade_regression
+			desktop.DesktopOnline.sendEvent('Died on level ${Game.CurrentLevel + 1}');
+#end
+}
+#else
 			AxolAPI.sendEvent('Died on level ${Game.CurrentLevel + 1}');
+#end
 			FlxG.resetState();
 		});
 	}
@@ -314,7 +350,11 @@ class PlayState extends FlxState
 
 		if (!ready || !gameStarted || !player.alive)
 			return;
-		if (Actions.pause.triggered)
+		#if desktop
+        if (desktop.DesktopControls.allow(desktopGate) && Actions.pause.triggered)
+        #else
+if (Actions.pause.triggered)
+        #end
 		{
 			pause();
 			return;
@@ -372,14 +412,30 @@ class PlayState extends FlxState
 						{
 							NGAPI.postPlayerHiscore("Total Scores", Game.Scores.get(0) + Game.Scores.get(1) + Game.Scores.get(2), (_) ->
 							{
+#if desktop
+{
+#if !arcade_regression
+								desktop.DesktopOnline.sendEvent('Game Won!');
+#end
+}
+#else
 								AxolAPI.sendEvent('Game Won!');
+#end
 								FlxG.switchState(GameWinState.new);
 							});
 						}
 						else
 						{
 							Game.CurrentLevel++;
+#if desktop
+{
+#if !arcade_regression
+							desktop.DesktopOnline.sendEvent('Cleared Level ${Game.CurrentLevel + 1}');
+#end
+}
+#else
 							AxolAPI.sendEvent('Cleared Level ${Game.CurrentLevel + 1}');
+#end
 
 							FlxG.switchState(PlayState.new);
 						}
@@ -388,14 +444,30 @@ class PlayState extends FlxState
 					if (Game.CurrentLevel < 2)
 					{
 						Game.CurrentLevel++;
+#if desktop
+{
+#if !arcade_regression
+						desktop.DesktopOnline.sendEvent('Cleared Level ${Game.CurrentLevel + 1}');
+#end
+}
+#else
 						AxolAPI.sendEvent('Cleared Level ${Game.CurrentLevel + 1}');
+#end
 
 						FlxG.switchState(PlayState.new);
 					}
 					else
 					{
 						// game win!?
+#if desktop
+{
+#if !arcade_regression
+						desktop.DesktopOnline.sendEvent('Game Won!');
+#end
+}
+#else
 						AxolAPI.sendEvent('Game Won!');
+#end
 						FlxG.switchState(GameWinState.new);
 					}
 					#end
@@ -567,6 +639,10 @@ class PlayState extends FlxState
 
 class PauseSubState extends FlxSubState
 {
+    #if desktop
+    public var desktopGate=new desktop.DesktopGate();
+    override public function openSubState(state:flixel.FlxSubState):Void {desktopGate.reset();super.openSubState(state);}
+    #end
 	public var ready:Bool = false;
 	public var selected(default, null):Int = 0;
 	public var options(default, null):Array<String> = ["Resume", "Restart Level", "Main Menu"];
@@ -628,6 +704,9 @@ class PauseSubState extends FlxSubState
 		super.update(elapsed);
 		if (!ready)
 			return;
+        #if desktop
+        if(subState!=null||!desktop.DesktopControls.allow(desktopGate))return;
+        #else
 		// Ignore the release that belongs to the press which opened this menu.
 		if (waitingForRelease)
 		{
@@ -635,6 +714,7 @@ class PauseSubState extends FlxSubState
 				waitingForRelease = false;
 			return;
 		}
+        #end
 		if (Actions.backUI.triggered || Actions.pause.triggered)
 		{
 			ready = false;
@@ -670,8 +750,8 @@ class PauseSubState extends FlxSubState
 				FlxG.switchState(TitleState.new);
 			#if desktop
 			case 3:
-				closeCallback = null;
-				openfl.system.System.exit(0);
+                ready=true;
+                openSubState(new desktop.DesktopExit());
 			#end
 		}
 	}

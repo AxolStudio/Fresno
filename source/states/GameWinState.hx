@@ -27,6 +27,10 @@ import flixel.FlxState;
 
 class GameWinState extends FlxState
 {
+	#if desktop
+	var desktopGate=new desktop.DesktopGate();
+	var submitted=false;
+	#end
 	public var scoresReady:Bool = false;
 
 	#if (html5 && ng)
@@ -226,6 +230,9 @@ class GameWinState extends FlxState
 				cursor.visible = true;
 				ready = true;
 				scoresShown = true;
+				#if desktop
+				desktopGate.reset();
+				#end
 			}
 		});
 		#end
@@ -234,6 +241,9 @@ class GameWinState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+		#if desktop
+		if(!desktop.DesktopControls.allow(desktopGate))return;
+		#end
 
 		if (!leaving && Actions.backUI.triggered)
 		{
@@ -330,10 +340,24 @@ class GameWinState extends FlxState
 
 	private function submit():Void
 	{
+		#if desktop
+		if(submitted||leaving)return;
+		submitted=true;
+		#end
 		ready = false;
 
 		Game.RememberInits = [initVals[0], initVals[1], initVals[2]];
+		#if desktop
+        var initials=inits[0].text+inits[1].text+inits[2].text;
+        desktop.DesktopOnlineLocal.record(playerTotal,initials);
+        var token="";
+        #if !arcade_regression
+        token=desktop.DesktopOnline.submitScore(playerTotal,initials);
+        #end
+        openSubState(new HiScoreState({desktopToken:token}));
+        #else
 		AxolAPI.sendScore(playerTotal, inits[0].text + inits[1].text + inits[2].text, scoreSent);
+        #end
 
 	}
 
@@ -374,6 +398,9 @@ class GameWinState extends FlxState
 	function set_alpha(Value:Float):Float
 	{
 		alpha = FlxMath.bound(Value, 0, 1);
+		#if desktop
+		if(frame==null||title==null)return alpha;
+		#end
 
 		frame.alpha = alpha;
 
@@ -407,6 +434,23 @@ class GameWinState extends FlxState
 
 class HiScoreState extends FlxSubState
 {
+ #if desktop
+ var desktopGate=new desktop.DesktopGate();
+ var desktopView:desktop.DesktopOnlineLeaderboard;
+ var desktopToken="";
+ var desktopLines:Array<NormalText>=[];
+ var desktopStatus:NormalText;
+ function desktopRefresh():Void {
+  title.text=desktopView.title();title.screenCenter(FlxAxes.X);
+  var rows=desktopView.rows();
+  for(i in 0...desktopLines.length){
+   var line=desktopLines[i];line.text=i<rows.length?('${rows[i].position}: ${rows[i].initials}  ${rows[i].amount}') : "";
+   line.color=i<rows.length&&rows[i].id==desktopView.lastId()?0xffffff00:0xffffffff;
+   line.screenCenter(FlxAxes.X);
+  }
+  desktopStatus.text=desktopView.status();desktopStatus.screenCenter(FlxAxes.X);
+ }
+ #end
 	var frame:InnerFrame;
 	var title:FlxBitmapText;
 	var scoresLeft:Array<OneOfTwo<NormalText, RainbowText>> = [];
@@ -438,13 +482,27 @@ class HiScoreState extends FlxSubState
 	{
 		super();
 
+        #if desktop
+        desktopToken=Msg.desktopToken==null?"":Msg.desktopToken;
+        desktopView=new desktop.DesktopOnlineLeaderboard(desktop.DesktopOnlineLocal.rows,desktopToken!="",desktop.DesktopOnlineLocal.saved,desktop.DesktopOnlineLocal.lastId);
+        #else
 		scores = Msg.data.scores.scores;
 		hiSlot = Std.parseInt(Msg.data.scores.lastId);
+        #end
 	}
 	#end
 
 	override public function create():Void
 	{
+        #if desktop
+        add(new FlxSprite().makeGraphic(320,180,Game.OUR_BLACK));
+        title=new FlxBitmapText(0,5,"",Game.NormalFont);add(title);
+        for(i in 0...11){var line=new NormalText("");line.y=20+i*10;desktopLines.push(line);add(line);}
+        desktopStatus=new NormalText("");desktopStatus.y=137;add(desktopStatus);
+        exitText=new NormalText("Enter/A: Title  Up/Down: Local/Online");exitText.y=153;exitText.screenCenter(FlxAxes.X);add(exitText);
+        desktopRefresh();ready=true;super.create();
+        #else
+
 		FlxG.camera.pixelPerfectRender = true;
 
 		title = new FlxBitmapText(0, 0, "", FlxBitmapFont.fromAngelCode("assets/images/fat_text.png", "assets/images/fat_text.xml"));
@@ -562,10 +620,25 @@ class HiScoreState extends FlxSubState
 		});
 
 		super.create();
+	        #end
 	}
 
 	override public function update(elapsed:Float):Void
 	{
+        #if desktop
+        super.update(elapsed);
+        var result:Null<desktop.DesktopOnlineClient.DesktopOnlineResult>=null;
+        #if !arcade_regression
+        if(desktopView.pending())result=desktop.DesktopOnline.takeResult(desktopToken);
+        #end
+        if(desktopView.update(elapsed,result))desktopRefresh();
+        if(!ready||!desktop.DesktopControls.allow(desktopGate))return;
+        if(Actions.backUI.triggered||Actions.pressUI.triggered){
+         ready=false;desktopView.close();
+         FlxG.camera.fade(Game.OUR_BLACK,.25,false,()->FlxG.switchState(TitleState.new),true);
+        }else if(Actions.upUI.triggered||Actions.downUI.triggered){if(desktopView.toggle())desktopRefresh();}
+        #else
+
 		super.update(elapsed);
 
 		if (!ready)
@@ -579,11 +652,15 @@ class HiScoreState extends FlxSubState
 				FlxG.switchState(TitleState.new);
 			});
 		}
+	        #end
 	}
 
 	private function set_alpha(Value:Float):Float
 	{
 		alpha = FlxMath.bound(Value, 0, 1);
+		#if desktop
+		if(frame==null||title==null)return alpha;
+		#end
 
 		frame.alpha = alpha;
 

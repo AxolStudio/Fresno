@@ -1,0 +1,69 @@
+name: Fresno Windows arcade validation
+on:
+  push:
+    branches: ['work/fresno-windows-build-20261112']
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: game
+    env:
+      FRESNO_SOURCE_SHA: SOURCE_SHA
+      HXCPP_COMPILE_THREADS: 3
+      HXCPP_COMPILE_CACHE: ${{ github.workspace }}/.hxcpp-cache
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: AxolStudio/Fresno
+          ref: ${{ env.FRESNO_SOURCE_SHA }}
+          path: game
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: AxolStudio/axollib
+          ref: 7ad35e46be22517cc4d2677abcf48ec3f1808cb9
+          path: game/ci-dependency
+          persist-credentials: false
+      - uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: 4.3.7
+      - uses: actions/cache/restore@v4
+        with:
+          path: .hxcpp-cache
+          key: fresno-hxcpp-win2022-haxe437-hxcpp432-${{ env.FRESNO_SOURCE_SHA }}
+          restore-keys: fresno-hxcpp-win2022-haxe437-hxcpp432-
+      - name: Install isolated pinned Windows dependencies
+        run: ./tools/Setup-WindowsLibraries.ps1
+      - name: Non-desktop preservation and offline unit tests
+        run: |
+          python tools/Test-ArcadePreservation.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          ./tools/Test-ArcadeCore.ps1
+      - name: Isolated native regression and independent input smoke
+        run: ./tools/Build-ArcadeTests.ps1
+      - name: Compile single fullscreen Windows candidate (no launch)
+        run: ./tools/Build-WindowsCandidate.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Fresno-Windows
+          path: game/candidate
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: .hxcpp-cache
+          key: fresno-hxcpp-win2022-haxe437-hxcpp432-${{ env.FRESNO_SOURCE_SHA }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fresno-windows-diagnostics
+          path: game/diagnostics
+          if-no-files-found: warn
+          retention-days: 14

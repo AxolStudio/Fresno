@@ -12,6 +12,10 @@ import flixel.FlxState;
 
 class CreditsState extends FlxState
 {
+    #if desktop
+    public var desktopGate=new desktop.DesktopGate();
+    override public function openSubState(state:flixel.FlxSubState):Void {desktopGate.reset();super.openSubState(state);}
+    #end
 	private var ready:Bool = false;
 
 	public override function create():Void
@@ -87,6 +91,9 @@ class CreditsState extends FlxState
 		super.update(elapsed);
 		if (!ready)
 			return;
+        #if desktop
+        if(subState!=null||!desktop.DesktopControls.allow(desktopGate))return;
+        #end
 		if (Actions.any.triggered)
 		{
 			ready = false;

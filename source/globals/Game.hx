@@ -15,13 +15,18 @@ import objects.IAnimal;
 import openfl.utils.ByteArray;
 import globals.NGAPI;
 
+#if !(desktop && arcade_regression)
 @:file("keys/axolapi") class AxolKey extends ByteArrayData {}
+#end
 
 class Game
 {
+	#if !(desktop && arcade_regression)
 	static private var axolBytes = new AxolKey();
 
 	static private var AXOL_KEY:String = StringTools.replace(axolBytes.readUTFBytes(axolBytes.length), "\n", "");
+
+	#end
 
 	public static var State:PlayState;
 	public static var Backgrounds:Map<Theme, String> = [
@@ -69,7 +74,9 @@ class Game
 		if (gameInitialized)
 			return;
 
+		#if !desktop
 		AxolAPI.initialize(AXOL_KEY);
+		#end
 
 		#if (html5 && ng)
 		NGAPI.init();
@@ -84,6 +91,12 @@ class Game
 
 		buildObstacles();
 		gameInitialized = true;
+		#if desktop
+		desktop.DesktopOnlineLocal.initialize();
+		#if !arcade_regression
+		desktop.DesktopOnline.start(AXOL_KEY);
+		#end
+		#end
 	}
 
 	public static function resetScores():Void

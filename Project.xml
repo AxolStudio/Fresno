@@ -57,6 +57,8 @@
 
 
 	<source path="source" />
+	<haxeflag name="--macro" value="desktop.DesktopCompatibility.install()" if="desktop" />
+	<window fullscreen="true" if="windows" />
 <assets path="assets" embed="true"/>
 
 
@@ -66,7 +68,8 @@
 	<haxelib name="flixel-addons" version="4.0.2" />
 
 
-	<include path="axollib/include.xml" />
+	<include path="axollib/include.xml" unless="desktop" />
+	<include path="ci-dependency/include.xml" if="desktop" />
 
 <haxelib name="newgrounds" if="ng" />
 
